@@ -1,0 +1,280 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>PG-MAP &mdash; Joint MAP Optimization for Inference-Time Alignment</title>
+  <meta name="description" content="A training-free joint MAP framework that re-optimizes the conditioning c and the latent z_t at every denoising step, with a transport-specific reduction to flow matching.">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+<header class="hero">
+  <p class="venue">NeurIPS&nbsp;2026 &middot; submission (double-blind)</p>
+  <h1>PG-MAP: Joint MAP Optimization for Inference-Time Alignment of Diffusion and Flow-Matching Models</h1>
+  <p class="authors">Anonymous authors</p>
+  <nav class="hero-links" aria-label="resources">
+    <a class="btn" href="#abstract">Abstract</a>
+    <a class="btn" href="#method">Method</a>
+    <a class="btn" href="#results">Results</a>
+    <a class="btn" href="#gallery">Gallery</a>
+    <a class="btn" href="#code">Code</a>
+  </nav>
+  <p class="anonymous-note">This page is provided as anonymous supplementary material. All identifying information has been removed for double-blind review. The full code release is also available as anonymous supplementary material.</p>
+</header>
+
+<main>
+
+<section id="abstract" class="prose">
+  <h2>Abstract</h2>
+  <p>
+    Inference-time alignment of pretrained text-to-image models is typically performed along a <em>single</em> control axis &mdash; classifier-free guidance, attention editing, or reward-based latent perturbations &mdash; which prevents modeling joint dependencies between conditioning and latent variables, and hinders transfer across generative transports. We propose <strong>PG-MAP</strong>, a training-free framework that recasts inference-time alignment as a trajectory-level Gibbs-MAP / proximal energy optimization over the conditioning&nbsp;<em>c</em> and the latent state&nbsp;<em>z<sub>t</sub></em> via a forward-consistency coupling, optionally guided by a frozen preference reward. This joint formulation enables <strong>coordinated updates across modalities</strong> while remaining compatible with both diffusion and flow-matching models through transport-specific adaptations. Across diffusion backbones (SD&nbsp;1.5, SDXL), PG-MAP consistently improves alignment metrics such as PickScore and Aesthetic and, when combined with tuned classifier-free guidance, achieves the strongest overall performance. On flow-matching models (SD3.5-medium), the framework reduces to a latent-only variant, reaching <strong>91.9% PickScore</strong> and 75.7% HPS win rates against a static baseline, with controlled experiments ruling out noise-related artifacts.
+  </p>
+</section>
+
+<section id="method" class="prose">
+  <h2>Method overview</h2>
+  <p>Per denoising step <em>t</em>, PG-MAP solves a proximal MAP problem on (<em>c</em>, <em>z<sub>t</sub></em>):</p>
+
+  <figure class="equation">
+    <span class="eq">
+      &Jscr;<sub>t</sub>(<em>c</em>, <em>z<sub>t</sub></em>) =
+      &minus; <sup>1</sup>&frasl;<sub>2&beta;<sub>t|s</sub></sub> &Vert; <em>r<sub>t</sub></em>(<em>c</em>, <em>z<sub>t</sub></em>) &Vert;<sup>2</sup>
+      &minus; <sup>1</sup>&frasl;<sub>2&sigma;<sub>c</sub><sup>2</sup></sub> &Vert; <em>c</em> &minus; &mu;<sub>t</sub> &Vert;<sup>2</sup>
+      &minus; <sup>1</sup>&frasl;<sub>2&sigma;<sub>z</sub>(t)<sup>2</sup></sub> &Vert; <em>z<sub>t</sub></em> &minus; <em>z<sub>t</sub><sup>ddim</sup></em> &Vert;<sup>2</sup>
+      &plus; &lambda; &middot; <em>Q</em>(<em>x&#770;</em><sub>0</sub>(<em>z<sub>t</sub></em>, <em>c</em>), <em>y</em>)
+    </span>
+    <figcaption>
+      Forward-consistency residual + Gaussian anchoring priors on both (<em>c</em>, <em>z<sub>t</sub></em>) + preference reward tilt. The latent prior is <em>schedule-adaptive</em>: &sigma;<sub>z</sub>(t) = &gamma;&radic;(1&minus;&alpha;&#772;<sub>t</sub>) on DDPM and &sigma;<sub>z</sub>(t) = &gamma;(1&minus;t) on flow matching.
+    </figcaption>
+  </figure>
+
+  <p>
+    <strong>Special cases.</strong> The same objective recovers <strong>MAP-c</strong> (conditioning-only, &sigma;<sub>z</sub>&rarr;0, &lambda;=0), <strong>Reward-z</strong> (latent-only, &sigma;<sub>c</sub>&rarr;0), <strong>MAP-cz</strong> (reward-free joint, &lambda;=0), and a Universal-Guidance-style limit. CFG modifies the denoiser vector field rather than the query point and is therefore <em>composable</em> with PG-MAP &mdash; the Tuned-CFG + PG-MAP row stacks the two control surfaces.
+  </p>
+
+  <p>
+    <strong>Transport-dependent active set.</strong> On diffusion, both <em>c</em> and <em>z<sub>t</sub></em> are refined at high-noise steps. On flow matching, a local Euler amplification analysis collapses the active set to {<em>z<sub>t</sub></em>} only at data-side steps &mdash; the resulting variant we call <strong>UG-FM</strong>, which delivers the 91.9% PickScore headline.
+  </p>
+
+  <figure class="diagnostic">
+    <div class="diag-row">
+      <figure>
+        <img src="images/fig1_delta_c.jpg" alt="‖Δc‖ trace over denoising steps">
+        <figcaption>‖Δ<em>c</em>‖ grows toward the data end as the cross-attention signal sharpens.</figcaption>
+      </figure>
+      <figure>
+        <img src="images/fig1_delta_z.jpg" alt="‖Δz‖ trace over denoising steps">
+        <figcaption>‖Δ<em>z<sub>t</sub></em>‖ decays as the schedule-adaptive trust region tightens near the data end.</figcaption>
+      </figure>
+    </div>
+    <figcaption class="diag-caption">
+      The opposite slopes are a signature of the non-stationary objective and the asymmetric, schedule-adaptive prior design.
+    </figcaption>
+  </figure>
+</section>
+
+<section id="results" class="prose">
+  <h2>Headline results</h2>
+  <p>PartiPrompts (<em>n</em>=1632), seed 123, win-rate vs same-seed static baseline.</p>
+
+  <div class="table-wrap">
+    <table class="results">
+      <thead>
+        <tr>
+          <th>Backbone</th>
+          <th>Method</th>
+          <th>PickScore</th>
+          <th>HPS</th>
+          <th>Aesthetic</th>
+          <th>CLIP</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td rowspan="2">SD&nbsp;1.5</td>
+          <td>PG-MAP (default)</td>
+          <td><strong>56.8%</strong></td>
+          <td>52.8%</td>
+          <td>54.0%</td>
+          <td>50.6%</td>
+        </tr>
+        <tr>
+          <td>Tuned-CFG + PG-MAP</td>
+          <td>53.6%</td>
+          <td><strong>66.0%</strong></td>
+          <td><strong>60.2%</strong></td>
+          <td><strong>56.0%</strong></td>
+        </tr>
+        <tr>
+          <td rowspan="2">SDXL</td>
+          <td>PG-MAP (default)</td>
+          <td><strong>56.4%</strong></td>
+          <td>47.1%</td>
+          <td>56.2%</td>
+          <td>48.1%</td>
+        </tr>
+        <tr>
+          <td>Tuned-CFG + PG-MAP</td>
+          <td>51.3%</td>
+          <td><strong>64.6%</strong></td>
+          <td><strong>56.5%</strong></td>
+          <td><strong>52.8%</strong></td>
+        </tr>
+        <tr>
+          <td>SD3.5-medium</td>
+          <td><strong>UG-FM</strong> (Ours)</td>
+          <td><strong>91.9%</strong></td>
+          <td><strong>75.7%</strong></td>
+          <td>51.7%</td>
+          <td>54.2%</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <p class="caption">
+    The SDXL row of the table also wins three out of four pairwise human-preference comparisons against strong baselines (vs SDXL static: 60.2%, vs Tuned-CFG: 56.0%, vs NFE-matched UG: 66.8%; 100 raters, 6,200 judgments). Full statistical tests and per-metric Wilcoxon <em>p</em>-values are in the paper.
+  </p>
+</section>
+
+<section id="gallery" class="prose">
+  <h2>Paired image gallery</h2>
+  <p>
+    Same prompt, same seed, same backbone. Left: static baseline. Right: PG-MAP (or one of its specializations). Click any pair to enlarge.
+  </p>
+
+  <article class="pair" data-axis="c-side">
+    <h3>MAP-<em>c</em> refinement rebinds prompt-subject identity</h3>
+    <p class="prompt">&ldquo;a cinematic photo of a red panda astronaut, white space suit, dramatic lighting&rdquo;</p>
+    <div class="pair-grid">
+      <figure>
+        <a href="images/fig1_cside_dolphin_base.jpg"><img src="images/fig1_cside_dolphin_base.jpg" alt="static baseline" loading="lazy"></a>
+        <figcaption>Static baseline &mdash; commits to a generic human astronaut and never recovers the panda subject.</figcaption>
+      </figure>
+      <figure>
+        <a href="images/fig1_cside_dolphin_mapc.jpg"><img src="images/fig1_cside_dolphin_mapc.jpg" alt="MAP-c refinement" loading="lazy"></a>
+        <figcaption><strong>MAP-<em>c</em></strong> &mdash; refining the conditioning <em>c</em> at each step brings the panda subject back.</figcaption>
+      </figure>
+    </div>
+  </article>
+
+  <article class="pair" data-axis="z-side">
+    <h3>Reward-<em>z</em> refinement lifts perceptual quality</h3>
+    <p class="prompt">&ldquo;a tea cup with a tiny galaxy swirling inside&rdquo;</p>
+    <div class="pair-grid">
+      <figure>
+        <a href="images/fig1_zside_galaxy_base.jpg"><img src="images/fig1_zside_galaxy_base.jpg" alt="static baseline" loading="lazy"></a>
+        <figcaption>Static baseline.</figcaption>
+      </figure>
+      <figure>
+        <a href="images/fig1_zside_galaxy_rewardz.jpg"><img src="images/fig1_zside_galaxy_rewardz.jpg" alt="Reward-z refinement" loading="lazy"></a>
+        <figcaption><strong>Reward-<em>z</em></strong> &mdash; richer galaxy swirl, more saturated nebula colors, crisper porcelain reflections; same composition.</figcaption>
+      </figure>
+    </div>
+  </article>
+
+  <article class="pair" data-axis="joint">
+    <h3>Joint PG-MAP exercises both axes at once (SDXL)</h3>
+    <p class="prompt">&ldquo;a phoenix rising from ashes, vivid orange and red feathers, dramatic lighting&rdquo;</p>
+    <div class="pair-grid">
+      <figure>
+        <a href="images/fig2_phoenix_base.jpg"><img src="images/fig2_phoenix_base.jpg" alt="static baseline" loading="lazy"></a>
+        <figcaption>Static baseline.</figcaption>
+      </figure>
+      <figure>
+        <a href="images/fig2_phoenix_pgmap.jpg"><img src="images/fig2_phoenix_pgmap.jpg" alt="PG-MAP" loading="lazy"></a>
+        <figcaption><strong>PG-MAP</strong> &mdash; sharper feathers (<em>z</em>-side texture), a more coherent body silhouette (<em>c</em>-side composition), and a richer tail plume.</figcaption>
+      </figure>
+    </div>
+  </article>
+
+  <article class="pair" data-axis="joint">
+    <h3>&hellip;and recovers anatomy + texture together</h3>
+    <p class="prompt">&ldquo;a swordsman mid-leap slashing through a glowing magical barrier&rdquo;</p>
+    <div class="pair-grid">
+      <figure>
+        <a href="images/fig2_swordsman_base.jpg"><img src="images/fig2_swordsman_base.jpg" alt="static baseline" loading="lazy"></a>
+        <figcaption>Static baseline.</figcaption>
+      </figure>
+      <figure>
+        <a href="images/fig2_swordsman_pgmap.jpg"><img src="images/fig2_swordsman_pgmap.jpg" alt="PG-MAP" loading="lazy"></a>
+        <figcaption><strong>PG-MAP</strong> &mdash; more detailed hair (<em>z</em>-side), an articulated face, and an anatomically correct hand on the sword grip (<em>c</em>-side).</figcaption>
+      </figure>
+    </div>
+  </article>
+
+  <article class="pair" data-axis="joint">
+    <h3>Composition + atmospherics on a scene prompt</h3>
+    <p class="prompt">&ldquo;an old sailboat sailing through a thunderstorm with massive lightning bolts overhead&rdquo;</p>
+    <div class="pair-grid">
+      <figure>
+        <a href="images/fig2_sailboat_base.jpg"><img src="images/fig2_sailboat_base.jpg" alt="static baseline" loading="lazy"></a>
+        <figcaption>Static baseline.</figcaption>
+      </figure>
+      <figure>
+        <a href="images/fig2_sailboat_pgmap.jpg"><img src="images/fig2_sailboat_pgmap.jpg" alt="PG-MAP" loading="lazy"></a>
+        <figcaption><strong>PG-MAP</strong> &mdash; the lightning bolts are sharper, the sea has more wave structure, and the sails resolve to a believable rig.</figcaption>
+      </figure>
+    </div>
+  </article>
+
+  <article class="pair" data-axis="joint">
+    <h3>Subject composition under a complex compound prompt</h3>
+    <p class="prompt">&ldquo;a sea turtle wearing a backpack made of corals, floating through a forest&rdquo;</p>
+    <div class="pair-grid">
+      <figure>
+        <a href="images/fig2_turtle_base.jpg"><img src="images/fig2_turtle_base.jpg" alt="static baseline" loading="lazy"></a>
+        <figcaption>Static baseline.</figcaption>
+      </figure>
+      <figure>
+        <a href="images/fig2_turtle_pgmap.jpg"><img src="images/fig2_turtle_pgmap.jpg" alt="PG-MAP" loading="lazy"></a>
+        <figcaption><strong>PG-MAP</strong> &mdash; the backpack is now made of recognizable corals (compositional binding), and the forest backdrop is more legible.</figcaption>
+      </figure>
+    </div>
+  </article>
+
+  <article class="pair" data-axis="fm">
+    <h3>Flow matching: UG-FM perturbations are sub-pixel and structured</h3>
+    <p class="prompt">SD3.5-medium &mdash; UG-FM perturbation vs static baseline, full-image vs zoomed crop.</p>
+    <div class="single">
+      <figure>
+        <a href="images/ug_fm_zoom_top1.jpg"><img src="images/ug_fm_zoom_top1.jpg" alt="UG-FM zoom diagnostic" loading="lazy"></a>
+        <figcaption>
+          Left to right: static baseline / UG-FM / pixel-difference heatmap. The UG-FM perturbation is sub-pixel (mean RMSE 0.61 / 255), low/mid-frequency dominant, and concentrates on the foreground subject &mdash; ruling out white-noise reward hacking.
+        </figcaption>
+      </figure>
+    </div>
+  </article>
+</section>
+
+<section id="code" class="prose">
+  <h2>Code &amp; reproducibility</h2>
+  <p>
+    The full reference implementation (PG-MAP and all variants for SD&nbsp;1.5, SDXL, and SD3.5-medium), per-row YAML configs for every paper-table cell, one-command reproduction scripts, and ≤&nbsp;10-minute smoke tests are provided as anonymous supplementary material. After acceptance, the camera-ready code will be released under MIT license at a stable URL.
+  </p>
+  <ul class="code-points">
+    <li>One-command reproduction per paper table &mdash; e.g. <code>bash scripts/reproduce_table1_sdxl.sh</code></li>
+    <li>Smoke tests under 10&nbsp;min per backbone before any full run (<code>tests/smoke/</code>)</li>
+    <li>Single master seed (<code>123</code>); PartiPrompts shuffling is deterministic</li>
+    <li>Cross-GPU reproducibility within the bootstrap CI half-width</li>
+    <li>Statistical tests: paired Wilcoxon <em>p</em>-values + 1,000-resample bootstrap 95% CI on all win-rates</li>
+  </ul>
+</section>
+
+<section id="caveats" class="prose">
+  <h2>Limitations</h2>
+  <ul>
+    <li>The latent perturbation appears largely independent of CLIPScore; deployments prioritising strict text faithfulness should compose with Tuned-CFG.</li>
+    <li>Conditioning-side optimization helps most on attribute-binding and short / typography prompts &mdash; an image-conditioned per-prompt router is the natural next step.</li>
+    <li>Compute overhead: PG-MAP at <em>K</em>=2 with reward backward is roughly 2.6&times; the static baseline; the reward-free MAP-<em>cz</em> variant recovers most of the lift at ~1.5&times;.</li>
+  </ul>
+</section>
+
+</main>
+
+<footer>
+  <p>Anonymous &middot; supplementary material for NeurIPS&nbsp;2026 submission &middot; <a href="#top">back to top</a></p>
+</footer>
+
+</body>
+</html>

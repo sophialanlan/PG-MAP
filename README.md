@@ -67,6 +67,10 @@ PG-MAP/
 
 ---
 
+## Project page
+
+A self-contained, anonymous **project page with a paired image gallery** lives at [docs/site/](docs/site/) — `index.html` + `style.css` + 16 web-optimized JPEGs (~2.4 MB). Open it locally with `python -m http.server` from `docs/site/`, host it via GitHub Pages, or zip it for upload as anonymous supplementary material. See [docs/site/README.md](docs/site/README.md) for the three deployment options.
+
 ## Quick start
 
 ### 1. Environment
