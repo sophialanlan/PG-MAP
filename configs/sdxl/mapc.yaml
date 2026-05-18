@@ -1,0 +1,37 @@
+table: 1
+row: "MAP-c"
+backbone: sdxl
+method: mapc
+model_id: stabilityai/stable-diffusion-xl-base-1.0
+num_prompts: 1632
+seed: 123
+
+generation:
+  steps: 50
+  guidance: 5.0
+  height: 1024
+  width: 1024
+
+refinement:
+  rho: 0.5
+  rho_Q: 0.0
+  K: 2
+  eta_c: 1.0e-3
+  eta_z: 0.0
+  optimizer: sgd
+
+prior:
+  sigma_c: 1.0
+  gamma: 1.0
+
+reward: null
+
+expected_winrate:
+  pickscore: 0.514
+  hps: 0.503
+  clip: 0.485
+  aesthetic: 0.498
+
+notes: |
+  SDXL conditioning-only MAP. On SDXL we refine only the token-level
+  embedding (pooled embeddings and time_ids are fixed); see pgmap_sdxl.py.

@@ -1,0 +1,24 @@
+table: 1
+row: "Baseline (reference)"
+backbone: sdxl
+method: baseline
+model_id: stabilityai/stable-diffusion-xl-base-1.0
+num_prompts: 1632
+seed: 123
+
+generation:
+  steps: 50
+  guidance: 5.0
+  height: 1024
+  width: 1024
+  negative_prompt: "blurry, low quality"
+
+expected_winrate:
+  pickscore: 0.500
+  hps: 0.500
+  clip: 0.500
+  aesthetic: 0.500
+
+notes: |
+  Reference row. Standard DDIM + CFG. All other SDXL rows compute
+  win-rate against this row at the same seed.

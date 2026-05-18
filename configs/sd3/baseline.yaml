@@ -1,0 +1,24 @@
+table: 2
+row: "Baseline (reference)"
+backbone: sd3
+method: baseline
+model_id: stabilityai/stable-diffusion-3.5-medium
+num_prompts: 1632
+seed: 123
+
+generation:
+  scheduler: FlowMatchEulerDiscreteScheduler
+  steps: 28
+  guidance: 7.0
+  height: 1024
+  width: 1024
+
+expected_winrate:
+  pickscore: 0.500
+  hps: 0.500
+  clip: 0.500
+  aesthetic: 0.500
+
+notes: |
+  SD3.5-medium static rectified-flow Euler sampler. All other FM rows
+  compute win-rate against this at the same seed.

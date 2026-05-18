@@ -1,0 +1,46 @@
+table: 1
+row: "Tuned-CFG + PG-MAP"
+backbone: sdxl
+method: pgmap
+model_id: stabilityai/stable-diffusion-xl-base-1.0
+num_prompts: 1632
+seed: 123
+
+generation:
+  steps: 50
+  guidance: 7.5     # tuned CFG (val-optimal for HPS/Aesthetic on SDXL)
+  height: 1024
+  width: 1024
+
+refinement:
+  rho: 0.5
+  rho_Q: 0.3
+  K: 2
+  eta_c: 1.0e-3
+  eta_z: 0.005
+  optimizer: sgd
+
+prior:
+  sigma_c: 1.0
+  gamma: 1.0
+
+reward:
+  model_name: pickscore
+  model_id: yuvalkirstain/PickScore_v1
+  lambda_reward: 0.1
+  grad_norm_strategy: unit
+
+baseline_reference:
+  # Win-rate is computed against the SDXL static (guidance=5.0) baseline.
+  guidance: 5.0
+
+expected_winrate:
+  pickscore: 0.513
+  hps: 0.646
+  clip: 0.528
+  aesthetic: 0.565
+
+notes: |
+  Stacks tuned CFG (w*=7.5 for SDXL) on top of PG-MAP refinement.
+  Reaches HPS 64.6% / Aesthetic 56.5% / CLIP 52.8% — strongest for
+  HPS/Aesthetic/CLIP on SDXL.

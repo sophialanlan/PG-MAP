@@ -1,0 +1,37 @@
+table: 2
+row: "FlowChef (gating-matched)"
+backbone: sd3
+method: flowchef
+model_id: stabilityai/stable-diffusion-3.5-medium
+num_prompts: 1632
+seed: 123
+
+generation:
+  scheduler: FlowMatchEulerDiscreteScheduler
+  steps: 28
+  guidance: 7.0
+  height: 1024
+  width: 1024
+
+refinement:
+  active_set: ["z_t"]
+  gate: data_side            # matches UG-FM's gate exactly
+  K_ug: 1
+  eta_z: 1.0
+  full_backprop_through_v_theta: false   # gradient skipping (FlowChef hallmark)
+
+reward:
+  model_name: pickscore
+  model_id: yuvalkirstain/PickScore_v1
+
+expected_winrate:
+  pickscore: 0.750
+  hps: 0.625
+  clip: 0.529
+  aesthetic: 0.469
+
+notes: |
+  Gating-matched FlowChef: same data-side window as UG-FM, isolating
+  the full-backprop axis. The 16.9 pp PickScore gap (75.0% vs 91.9%)
+  attributes to the Jacobian factor (I - (1-t) * d_v_theta / d_z)
+  that FlowChef's gradient skipping discards.

@@ -1,0 +1,38 @@
+table: 1
+row: "MAP-cz (lambda=0, reward-free)"
+backbone: sd15
+method: joint_cz
+model_id: runwayml/stable-diffusion-v1-5
+num_prompts: 1632
+seed: 123
+
+generation:
+  steps: 30
+  guidance: 7.5
+  height: 512
+  width: 512
+
+refinement:
+  rho: 0.4
+  rho_Q: 0.0          # reward gate off
+  K: 2
+  eta_c: 1.0e-4
+  eta_z: 0.005
+  optimizer: sgd
+
+prior:
+  sigma_c: 1.0
+  gamma: 1.0
+
+reward: null
+
+expected_winrate:
+  pickscore: 0.565
+  hps: 0.526
+  clip: 0.495
+  aesthetic: 0.549
+
+notes: |
+  Joint (c, z_t) MAP without the reward tilt. The cheapest joint
+  variant (no reward backward); ~2.6x faster than full PG-MAP.
+  Tracks the full PG-MAP within 0.3 pp PickScore.

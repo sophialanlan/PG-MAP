@@ -1,0 +1,37 @@
+table: 2
+row: "FlowChef (always-on)"
+backbone: sd3
+method: flowchef
+model_id: stabilityai/stable-diffusion-3.5-medium
+num_prompts: 1632
+seed: 123
+
+generation:
+  scheduler: FlowMatchEulerDiscreteScheduler
+  steps: 28
+  guidance: 7.0
+  height: 1024
+  width: 1024
+
+refinement:
+  active_set: ["z_t"]
+  gate: always_on            # FlowChef released default
+  K_ug: 1
+  eta_z: 1.0
+  full_backprop_through_v_theta: false   # gradient skipping (FlowChef hallmark)
+
+reward:
+  model_name: pickscore
+  model_id: yuvalkirstain/PickScore_v1
+
+expected_winrate:
+  pickscore: 0.824
+  hps: 0.681
+  clip: 0.539
+  aesthetic: 0.497
+
+notes: |
+  Baseline FlowChef (Patel et al. 2025) as released: K=1, gradient
+  skipping (no backprop through v_theta), eta tuned at 1.0 on val.
+  Costs ~9.5pp PickScore vs UG-FM at matched eta.
+  Code in flowchef_baseline/flowchef_core.py:47 (`with torch.no_grad():`).

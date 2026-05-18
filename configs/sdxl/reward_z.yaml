@@ -1,0 +1,40 @@
+table: 1
+row: "Reward-z"
+backbone: sdxl
+method: reward_z
+model_id: stabilityai/stable-diffusion-xl-base-1.0
+num_prompts: 1632
+seed: 123
+
+generation:
+  steps: 50
+  guidance: 5.0
+  height: 1024
+  width: 1024
+
+refinement:
+  rho: 0.5
+  rho_Q: 0.3
+  K: 2
+  eta_c: 0.0
+  eta_z: 0.005
+  optimizer: sgd
+
+prior:
+  sigma_c: 1.0
+  gamma: 1.0
+
+reward:
+  model_name: pickscore
+  model_id: yuvalkirstain/PickScore_v1
+  lambda_reward: 0.1
+  grad_norm_strategy: unit
+
+expected_winrate:
+  pickscore: 0.554
+  hps: 0.479
+  clip: 0.497
+  aesthetic: 0.567
+
+notes: |
+  SDXL latent-only with PickScore reward.

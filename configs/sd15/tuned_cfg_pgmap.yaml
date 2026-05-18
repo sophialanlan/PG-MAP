@@ -1,0 +1,49 @@
+table: 1
+row: "Tuned-CFG + PG-MAP"
+backbone: sd15
+method: pgmap
+model_id: runwayml/stable-diffusion-v1-5
+num_prompts: 1632
+seed: 123
+
+generation:
+  steps: 30
+  guidance: 12.0      # tuned CFG (val-optimal for HPS/Aesthetic on SD 1.5)
+  height: 512
+  width: 512
+
+refinement:
+  rho: 0.4
+  rho_Q: 0.3
+  K: 2
+  eta_c: 1.0e-4
+  eta_z: 0.005
+  optimizer: sgd
+
+prior:
+  sigma_c: 1.0
+  gamma: 1.0
+
+reward:
+  model_name: pickscore
+  model_id: yuvalkirstain/PickScore_v1
+  lambda_reward: 0.05
+  grad_norm_strategy: unit
+
+baseline_reference:
+  # Win-rate is computed against the SD 1.5 *static* (guidance=7.5) baseline,
+  # not against tuned-CFG alone — this preserves the "compared to default
+  # deployment" framing.
+  guidance: 7.5
+
+expected_winrate:
+  pickscore: 0.536
+  hps: 0.660
+  clip: 0.560
+  aesthetic: 0.602
+
+notes: |
+  Stacks tuned CFG (w*=12.0 for SD 1.5) on top of PG-MAP refinement.
+  CFG modifies the denoiser vector field; PG-MAP refines the query point —
+  they act on different control surfaces and are composable.
+  Reaches HPS 66.0% / Aesthetic 60.2% on SD 1.5.

@@ -1,0 +1,37 @@
+table: 1
+row: "MAP-c"
+backbone: sd15
+method: mapc
+model_id: runwayml/stable-diffusion-v1-5
+num_prompts: 1632
+seed: 123
+
+generation:
+  steps: 30
+  guidance: 7.5
+  height: 512
+  width: 512
+
+refinement:
+  rho: 0.4
+  rho_Q: 0.0          # no reward
+  K: 2
+  eta_c: 1.0e-4
+  eta_z: 0.0          # z frozen
+  optimizer: sgd
+
+prior:
+  sigma_c: 1.0
+  gamma: 1.0
+
+reward: null         # no reward term
+
+expected_winrate:
+  pickscore: 0.516
+  hps: 0.510
+  clip: 0.510
+  aesthetic: 0.449
+
+notes: |
+  Conditioning-only MAP. Special case of PG-MAP with sigma_z -> 0
+  and lambda = 0. Anchors z to z_ddim hard, optimizes only c.

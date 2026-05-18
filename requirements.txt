@@ -1,0 +1,38 @@
+# PG-MAP — Python dependencies
+# Tested with Python 3.11.13, CUDA 12.x.
+
+# ---- Core ML stack ----
+torch>=2.1.0
+torchvision>=0.16.0
+diffusers>=0.30.0,<0.32.0
+transformers>=4.40.0
+accelerate>=0.30.0
+safetensors>=0.4.0
+
+# ---- Data + datasets ----
+datasets>=2.18.0          # PartiPrompts loader
+Pillow>=10.0.0
+numpy>=1.24,<2.0
+scipy>=1.11.0             # Wilcoxon test
+pandas>=2.0.0             # CRR analysis tables
+
+# ---- Reward / scoring models ----
+open-clip-torch>=2.24.0   # PickScore + HPS backbone
+hpsv2>=1.2.0              # HPS-v2 wrapper (downloads HPS_v2_compressed.pt on first use)
+image-reward>=1.5         # ImageReward robustness rows (optional)
+ftfy>=6.1.0
+regex>=2023.0.0
+
+# ---- Misc ----
+tqdm>=4.65.0
+PyYAML>=6.0
+spacy>=3.6.0              # used by clean_prompt utilities
+requests>=2.31.0
+clint>=0.5.1              # progressbar for HPS checkpoint download
+clean-fid>=0.1.35         # FID (used in supplementary, optional)
+
+# ---- BLIP-VQA audit (optional, only for §3 robustness control) ----
+# Loaded on demand via transformers.AutoProcessor; no extra pip needed.
+
+# ---- Dev / smoke tests ----
+pytest>=7.4.0

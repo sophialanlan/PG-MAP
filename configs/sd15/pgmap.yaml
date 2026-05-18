@@ -1,0 +1,41 @@
+table: 1
+row: "PG-MAP (default)"
+backbone: sd15
+method: pgmap
+model_id: runwayml/stable-diffusion-v1-5
+num_prompts: 1632
+seed: 123
+
+generation:
+  steps: 30
+  guidance: 7.5
+  height: 512
+  width: 512
+
+refinement:
+  rho: 0.4
+  rho_Q: 0.3
+  K: 2
+  eta_c: 1.0e-4
+  eta_z: 0.005
+  optimizer: sgd
+
+prior:
+  sigma_c: 1.0
+  gamma: 1.0
+
+reward:
+  model_name: pickscore
+  model_id: yuvalkirstain/PickScore_v1
+  lambda_reward: 0.05
+  grad_norm_strategy: unit
+
+expected_winrate:
+  pickscore: 0.568
+  hps: 0.528
+  clip: 0.506
+  aesthetic: 0.540
+
+notes: |
+  Recommended default. Full joint (c, z_t) refinement with PickScore reward.
+  Reproduce with: bash scripts/reproduce_table1_sd15.sh

@@ -1,0 +1,50 @@
+table: 2
+row: "UG-FM (Ours, headline)"
+backbone: sd3
+method: ug_fm
+model_id: stabilityai/stable-diffusion-3.5-medium
+num_prompts: 1632
+seed: 123
+
+generation:
+  scheduler: FlowMatchEulerDiscreteScheduler
+  steps: 28
+  guidance: 7.0
+  height: 1024
+  width: 1024
+
+refinement:
+  # FM active set collapses to {z_t} with data-side gate only — see paper §3.2
+  active_set: ["z_t"]
+  gate: data_side
+  K_ug: 4
+  eta_z: 0.1
+  full_backprop_through_v_theta: true   # the load-bearing axis vs FlowChef
+
+prior:
+  # FM noise-scale: sigma_z(t) = gamma * (1 - t)
+  gamma: 0.5
+
+reward:
+  model_name: pickscore
+  model_id: yuvalkirstain/PickScore_v1
+  lambda_reward: null        # implicit via inner-loop on -Q gradient
+
+expected_winrate:
+  pickscore: 0.919
+  hps: 0.757
+  clip: 0.542
+  aesthetic: 0.517
+
+statistical_tests:
+  wilcoxon_p_pickscore: "<1e-100"
+  wilcoxon_p_hps:       "<1e-100"
+  wilcoxon_p_clip:      "<1e-100"
+
+notes: |
+  Flow-matching reduction of PG-MAP. Headline 91.9% PickScore /
+  75.7% HPS at n=1632. Three transport-specific substitutions:
+    (i)  DDIM consistency residual -> one-step Euler residual
+    (ii) Tweedie estimate -> FM endpoint  x_1 = z_t - (1-t) * v_theta
+    (iii) sigma_z(t) tracks FM noise scale (1-t) instead of sqrt(1-alpha_bar_t)
+  Reproduce with: bash scripts/reproduce_table2_fm.sh
