@@ -2,6 +2,13 @@
 
 > **NeurIPS 2026** &middot; Ruolan Sun, Pawel Polak &middot; Stony Brook University
 
+[![Open in Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/sophialanlan/PG-MAP/blob/main/notebooks/colab_pgmap_quickstart.ipynb)
+[![HF Space](https://img.shields.io/badge/🤗%20Demo-Gradio%20Space-orange)](https://huggingface.co/spaces/sophialan/pg-map-demo)
+[![HF Pipelines](https://img.shields.io/badge/🤗%20Pipelines-sd15%20%2F%20sdxl%20%2F%20sd3-yellow)](https://huggingface.co/sophialan)
+[![PyPI](https://img.shields.io/badge/PyPI-pg--map-blue)](#)
+[![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
+[![NeurIPS 2026](https://img.shields.io/badge/NeurIPS-2026-red)](#)
+
 **PG-MAP** (*Preference-Guided Adaptive MAP*) is a training-free inference-time framework that re-optimizes the conditioning $c$ and the latent $z_t$ at every denoising step via a **trajectory-level Gibbs-MAP / proximal energy** objective with forward-consistency coupling. The same objective $\mathcal{J}_t$ instantiates on both diffusion (SD 1.5, SDXL) and flow-matching (SD3.5-medium) backbones with transport-specific active sets.
 
 This repository is the **public reproducibility release** that backs the paper. It contains:
@@ -66,6 +73,36 @@ PG-MAP/
 ```
 
 ---
+
+## One-line drop-in (HuggingFace Hub custom pipelines)
+
+The PG-MAP custom pipelines are published on the HuggingFace Hub. After `pip install pg-map`, any user can drop PG-MAP into an existing diffusers stack with a single argument change:
+
+```python
+from diffusers import DiffusionPipeline
+from pgmap import sdxl_defaults, FrozenRewardModel
+import torch
+
+pipe = DiffusionPipeline.from_pretrained(
+    "stabilityai/stable-diffusion-xl-base-1.0",
+    custom_pipeline="sophialan/pg-map-sdxl",   # ← only diff vs vanilla SDXL
+    torch_dtype=torch.float16, variant="fp16",
+).to("cuda")
+
+image = pipe(
+    "a phoenix rising from ashes",
+    pg_map_config=sdxl_defaults(),
+    reward_model=FrozenRewardModel("pickscore", device="cuda"),
+).images[0]
+```
+
+| Backbone | HF custom pipeline | Try it |
+|---|---|---|
+| Stable Diffusion 1.5  | [`sophialan/pg-map-sd15`](https://huggingface.co/sophialan/pg-map-sd15) | [Colab ▶](https://colab.research.google.com/github/sophialanlan/PG-MAP/blob/main/notebooks/colab_pgmap_quickstart.ipynb) |
+| SDXL                  | [`sophialan/pg-map-sdxl`](https://huggingface.co/sophialan/pg-map-sdxl) | [Space ▶](https://huggingface.co/spaces/sophialan/pg-map-demo) |
+| SD 3.5-medium (UG-FM) | [`sophialan/pg-map-sd3`](https://huggingface.co/sophialan/pg-map-sd3)  | [Space ▶](https://huggingface.co/spaces/sophialan/pg-map-demo) |
+
+Pass `pg_map_config=None` and the pipeline falls through to the vanilla parent class — these are strict supersets of the standard diffusers pipelines.
 
 ## Project page
 

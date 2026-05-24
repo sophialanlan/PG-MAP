@@ -2,6 +2,31 @@
 
 All notable changes to the public PG-MAP release.
 
+## [v1.3.0] — 2026-05-18
+
+**Phase C: HuggingFace Hub outreach.** Custom-pipeline repos published, Gradio Space deployed, Colab quickstart shipped. PG-MAP is now a one-argument change to any existing diffusers stack.
+
+### Added
+
+- **3 HF Hub custom-pipeline repos** under the `sophialan` namespace:
+  - [`sophialan/pg-map-sd15`](https://huggingface.co/sophialan/pg-map-sd15) — SD 1.5
+  - [`sophialan/pg-map-sdxl`](https://huggingface.co/sophialan/pg-map-sdxl) — SDXL
+  - [`sophialan/pg-map-sd3`](https://huggingface.co/sophialan/pg-map-sd3) — SD3.5-medium (UG-FM default)
+  Loadable via `DiffusionPipeline.from_pretrained(..., custom_pipeline="sophialan/pg-map-sdxl")`. End-to-end validated on RTX PRO 6000.
+- **Gradio Space** [`sophialan/pg-map-demo`](https://huggingface.co/spaces/sophialan/pg-map-demo) — backbone dropdown (SD 1.5 / SDXL / SD3.5), prompt input, hyperparameter sliders for λ / η_z / K. Single-file `app.py` plus pinned `pg-map@v1.2.0` dependency. Currently on the free CPU tier — upgrade to A10G in Settings → Hardware for inference speed.
+- **Colab quickstart** at [`notebooks/colab_pgmap_quickstart.ipynb`](notebooks/colab_pgmap_quickstart.ipynb) — installs PG-MAP, loads SD 1.5 via the HF custom pipeline, generates side-by-side vanilla vs PG-MAP, sweeps $\lambda$. Optional SDXL and SD3.5-medium sections. Runs in ~5 minutes on a free T4.
+- **README badges** for the Colab notebook, the Space, the HF custom pipelines, and the (forthcoming) PyPI release.
+
+### Maintained / unchanged
+
+- The pipeline shim files on HF Hub re-export from `pgmap.pipelines.*` so behavior is bit-identical to v1.2.0 — the Hub repos are zero-state wrappers.
+- v1.0 reproduction scripts and v1.1 / v1.2 APIs unchanged.
+
+### Deferred to v1.4 (Phase D)
+
+- ComfyUI custom node + workflow JSON for the practitioner / artist community.
+- PyPI publication (the package is PyPI-ready; the actual `twine upload` is a single command but requires PyPI account credentials — provided separately).
+
 ## [v1.2.0] — 2026-05-18
 
 **Phase B: diffusers ``DiffusionPipeline`` subclasses.** PG-MAP now ships as a drop-in replacement for the standard diffusers pipelines for all three backbones, with a single ``pg_map_config`` kwarg controlling the per-step refinement.
