@@ -921,8 +921,19 @@ Examples:
     # --- Device ---
     ap.add_argument("--device", type=str, default="cuda",
                     help="Device for generation (cuda or cpu)")
-    ap.add_argument("--dtype", type=str, default="fp16", choices=["fp16", "fp32"],
-                    help="Model precision")
+    ap.add_argument("--dtype", type=str, default="fp16", choices=["fp16", "bf16", "fp32"],
+                    help="Model precision. 'fp16' is the paper default; 'bf16' matches the "
+                         "accelerate convention and is more stable on Ampere+/H100; 'fp32' is "
+                         "exact-reference (slow, ~2x VRAM).")
+    ap.add_argument("--mixed_precision", type=str, default=None, choices=["no", "fp16", "bf16"],
+                    help="accelerate-style alias for --dtype (overrides if both set). "
+                         "'no' -> fp32. Provided so PG-MAP slots cleanly into HuggingFace "
+                         "accelerate launch configs.")
+    ap.add_argument("--gradient_checkpointing", action="store_true",
+                    help="Enable gradient checkpointing on the UNet (SD/SDXL) or the MMDiT "
+                         "transformer (SD3.5). Saves ~30-50%% VRAM during the reward backward "
+                         "at the cost of a single extra forward; required for SDXL @ 1024^2 "
+                         "with K_inner > 2 on 24 GB cards.")
 
     # --- Methods ---
     ap.add_argument("--methods", nargs="+",
@@ -1043,7 +1054,23 @@ Examples:
         json.dump(config_log, f, indent=2)
 
     device = args.device
-    dtype = torch.float16 if (args.dtype == "fp16" and device == "cuda") else torch.float32
+
+    # Resolve precision: accelerate-style --mixed_precision wins if provided,
+    # otherwise fall back to the legacy --dtype flag.
+    if args.mixed_precision is not None:
+        _dtype_str = {"no": "fp32", "fp16": "fp16", "bf16": "bf16"}[args.mixed_precision]
+    else:
+        _dtype_str = args.dtype
+    if device == "cuda":
+        dtype = {
+            "fp16": torch.float16,
+            "bf16": torch.bfloat16,
+            "fp32": torch.float32,
+        }[_dtype_str]
+    else:
+        dtype = torch.float32  # CPU path: fp16/bf16 unsupported by most ops
+    config_log["resolved_dtype"] = str(dtype)
+    config_log["gradient_checkpointing"] = bool(args.gradient_checkpointing)
 
     # --- Load prompts ---
     if args.prompt_file:
@@ -1073,6 +1100,15 @@ Examples:
     else:
         from pgmap_sdxl import load_sdxl_models
         models = load_sdxl_models(args.model_id, device, dtype)
+
+    # --- Gradient checkpointing (accelerate-friendly, saves VRAM in reward backward) ---
+    if args.gradient_checkpointing:
+        unet = getattr(models, "unet", None)
+        if unet is not None and hasattr(unet, "enable_gradient_checkpointing"):
+            unet.enable_gradient_checkpointing()
+            print("  gradient_checkpointing: enabled on UNet")
+        else:
+            print("  gradient_checkpointing: requested but unet has no .enable_gradient_checkpointing()")
 
     # --- Load reward model ---
     needs_reward = any(m in ["pgmap", "reward_z", "sdpgmap"] for m in args.methods) or args.ablation

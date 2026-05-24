@@ -20,11 +20,60 @@ Supported models:
 
 from __future__ import annotations
 
-from typing import Optional
+from typing import Optional, Protocol, runtime_checkable
 
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
+
+
+@runtime_checkable
+class RewardModel(Protocol):
+    """Structural typing protocol for inference-time reward models.
+
+    Any object whose ``.score()`` method matches this signature can be passed
+    as the ``reward_model`` argument of ``pgmap_refine_step``, the
+    backbone-specific ``generate_*_pgmap`` functions, and the upcoming
+    PG-MAP diffusers pipelines (v1.2). External rewards do not need to
+    subclass ``FrozenRewardModel`` — implementing this protocol is enough.
+
+    The reward must return a **differentiable** scalar per image: gradients
+    must flow back through ``pixel_values`` to the VAE decoder, the UNet/
+    MM-DiT Jacobian, and ultimately to (c, z_t). Internal parameters of the
+    reward should be frozen (``requires_grad=False``); we never update them.
+
+    Convention:
+        pixel_values: (B, 3, H, W) tensor in [0, 1], typically the VAE decode
+                      of the Tweedie clean estimate at the current denoising
+                      step. **Must carry a graph back to (c, z_t).**
+        prompt:       The text prompt string (single prompt; PG-MAP scores
+                      one image at a time inside the inner loop).
+
+    Returns:
+        Tensor of shape (B,) — higher is better. Sign and scale must be
+        consistent across calls; the absolute level does not matter because
+        the gradient enters $\\mathcal{J}_t$ multiplied by $\\lambda$.
+
+    Example (minimal external reward)::
+
+        class MyReward:
+            def __init__(self, device):
+                self.scorer = load_my_scorer().eval().to(device)
+                for p in self.scorer.parameters():
+                    p.requires_grad_(False)
+
+            def score(self, pixel_values, prompt):
+                # pixel_values: (B,3,H,W) in [0,1], requires_grad=True
+                return self.scorer(pixel_values, prompt)  # (B,)
+
+        assert isinstance(MyReward("cuda"), RewardModel)   # passes structural check
+    """
+
+    model_name: str
+    device: torch.device
+
+    def score(self, pixel_values: torch.Tensor, prompt: str) -> torch.Tensor:
+        ...
 
 
 class FrozenRewardModel:

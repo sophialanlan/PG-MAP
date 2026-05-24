@@ -1,0 +1,159 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "pg-map"
+version = "1.1.0"
+description = "PG-MAP: Joint MAP Optimization for Inference-Time Alignment of Diffusion and Flow-Matching Models (NeurIPS 2026)"
+readme = "README.md"
+license = { file = "LICENSE" }
+requires-python = ">=3.10"
+authors = [
+    { name = "Ruolan Sun", email = "ruolan.sun@stonybrook.edu" },
+    { name = "Pawel Polak", email = "pawel.polak@stonybrook.edu" },
+]
+keywords = [
+    "diffusion-models",
+    "flow-matching",
+    "inference-time-alignment",
+    "preference-optimization",
+    "text-to-image",
+    "stable-diffusion",
+    "neurips-2026",
+]
+classifiers = [
+    "Intended Audience :: Science/Research",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: POSIX :: Linux",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Topic :: Scientific/Engineering :: Artificial Intelligence",
+]
+dependencies = [
+    "torch>=2.1.0",
+    "torchvision>=0.16.0",
+    "diffusers>=0.30.0,<0.32.0",
+    "transformers>=4.40.0",
+    "accelerate>=0.30.0",
+    "safetensors>=0.4.0",
+    "huggingface_hub>=0.22.0",
+    "datasets>=2.18.0",
+    "Pillow>=10.0.0",
+    "numpy>=1.24,<2.0",
+    "scipy>=1.11.0",
+    "pandas>=2.0.0",
+    "open-clip-torch>=2.24.0",
+    "ftfy>=6.1.0",
+    "regex>=2023.0.0",
+    "tqdm>=4.65.0",
+    "PyYAML>=6.0",
+    "requests>=2.31.0",
+]
+
+[project.optional-dependencies]
+hps = ["hpsv2>=1.2.0"]
+image-reward = ["image-reward>=1.5"]
+aesthetic = ["clean-fid>=0.1.35"]
+viz = ["matplotlib>=3.7.0"]
+demo = ["gradio>=4.0.0"]
+dev = [
+    "pytest>=7.4.0",
+    "ruff>=0.5.0",
+]
+# Convenience: everything except gradio + dev tools, which most academic
+# reproductions don't need.
+all = [
+    "hpsv2>=1.2.0",
+    "image-reward>=1.5",
+    "clean-fid>=0.1.35",
+    "matplotlib>=3.7.0",
+]
+
+[project.urls]
+Homepage = "https://github.com/sophialanlan/PG-MAP"
+Documentation = "https://github.com/sophialanlan/PG-MAP/blob/main/docs/REPRODUCE.md"
+Repository = "https://github.com/sophialanlan/PG-MAP"
+Issues = "https://github.com/sophialanlan/PG-MAP/issues"
+Changelog = "https://github.com/sophialanlan/PG-MAP/blob/main/CHANGELOG.md"
+ProjectPage = "https://github.com/sophialanlan/PG-MAP/tree/main/docs/site"
+
+# ---------------------------------------------------------------------------
+# Package discovery
+# ---------------------------------------------------------------------------
+# Layout: flat research-script modules at the repo root (pgmap_core.py,
+# pgmap_config.py, ...) PLUS a thin `pgmap/` package that re-exports the
+# main symbols under a single namespace. Both are installed so existing
+# `from pgmap_core import X` callers and new `from pgmap import X` callers
+# both work.
+[tool.setuptools]
+py-modules = [
+    "pgmap_config",
+    "pgmap_core",
+    "pgmap_reward",
+    "pgmap_sd15",
+    "pgmap_sdxl",
+    "pgmap_flow_core",
+    "pgmap_flow_sd3",
+    "pgmap_variants",
+    "pgmap_sd15_variants",
+    "pgmap_sdxl_variants",
+    "pgmap_flow_variants",
+    "pgmap_patch_schedule",
+    "pgmap_eval",
+    "validate_criteria",
+]
+
+[tool.setuptools.packages.find]
+include = ["pgmap*", "utils*", "eval*"]
+exclude = ["tests*", "scripts*", "configs*", "docs*", "data*", "flowchef_baseline*", "logs*", "eval_results*"]
+
+# Include the small bundled aesthetic checkpoint, HPS BPE, and YAML configs in
+# the wheel. The 1.9 GB HPS checkpoint stays out of distribution (download via
+# scripts/download_hps.sh).
+[tool.setuptools.package-data]
+utils = [
+    "aesthetics_model/*.pth",
+    "hps_bpe.txt.gz",
+    "open_clip/model_configs/*.json",
+    "open_clip/bpe_simple_vocab_16e6.txt.gz",
+]
+pgmap = ["configs/**/*.yaml", "py.typed"]
+
+[tool.setuptools.exclude-package-data]
+"*" = ["__pycache__/*", "*.pyc", "*.bak"]
+
+# ---------------------------------------------------------------------------
+# Console scripts: lets users do `pgmap-eval --backbone sd15 ...` after install
+# ---------------------------------------------------------------------------
+[project.scripts]
+pgmap-eval = "pgmap_eval:main"
+
+# ---------------------------------------------------------------------------
+# Ruff config — keep it light; we're not changing existing code style
+# ---------------------------------------------------------------------------
+[tool.ruff]
+line-length = 110
+target-version = "py310"
+extend-exclude = [
+    "utils/open_clip",
+    "flowchef_baseline",
+    "*.ipynb",
+]
+
+[tool.ruff.lint]
+select = ["E", "F", "W", "I"]
+ignore = [
+    "E501",  # line length handled by formatter
+    "E741",  # ambiguous variable names — common in math code
+]
+
+[tool.ruff.lint.isort]
+known-first-party = ["pgmap", "pgmap_core", "pgmap_config", "pgmap_reward"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+python_files = ["test_*.py"]
+addopts = ["-ra", "--strict-markers"]
