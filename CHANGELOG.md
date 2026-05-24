@@ -2,6 +2,57 @@
 
 All notable changes to the public PG-MAP release.
 
+## [v1.2.0] — 2026-05-18
+
+**Phase B: diffusers ``DiffusionPipeline`` subclasses.** PG-MAP now ships as a drop-in replacement for the standard diffusers pipelines for all three backbones, with a single ``pg_map_config`` kwarg controlling the per-step refinement.
+
+### Added
+
+- **`pgmap.pipelines.PGMAPStableDiffusionPipeline`** — subclass of `StableDiffusionPipeline`. Drop-in replacement; passing `pg_map_config=None` falls through to vanilla SD 1.5.
+- **`pgmap.pipelines.PGMAPStableDiffusionXLPipeline`** — subclass of `StableDiffusionXLPipeline`. SDXL with token-level $c$ refinement (pooled embeddings + time_ids kept frozen per paper §3.5).
+- **`pgmap.pipelines.PGMAPStableDiffusion3Pipeline`** — subclass of `StableDiffusion3Pipeline`. Dispatches to UG-FM (default; the 91.9% PickScore / 75.7% HPS row) or full PG-MAP-FM (when `pg_map_config.optimize_c=True`).
+- **Lazy import** of the heavy pipeline classes via `pgmap.__getattr__` — `import pgmap` stays fast for users who only need configs/reward.
+- **GPU smoke test** at [tests/smoke/smoke_pipeline.py](tests/smoke/smoke_pipeline.py) — verifies SD 1.5 vanilla + MAP-c paths, SDXL vanilla path, and SD3.5 class hierarchy in under 90 seconds on a single GPU.
+
+### Usage
+
+```python
+from pgmap.pipelines import PGMAPStableDiffusionPipeline
+from pgmap import sd15_defaults, FrozenRewardModel
+import torch
+
+pipe = PGMAPStableDiffusionPipeline.from_pretrained(
+    "runwayml/stable-diffusion-v1-5",
+    torch_dtype=torch.float16,
+    safety_checker=None,
+).to("cuda")
+
+cfg = sd15_defaults()
+reward = FrozenRewardModel("pickscore", device="cuda")
+
+image = pipe(
+    "a phoenix rising from ashes, vivid orange and red feathers",
+    pg_map_config=cfg,
+    reward_model=reward,
+).images[0]
+```
+
+Or, omit the PG-MAP args and the pipeline behaves identically to vanilla `StableDiffusionPipeline`:
+
+```python
+image = pipe("a phoenix rising from ashes").images[0]   # vanilla SD 1.5
+```
+
+### Maintained / unchanged
+
+- The v1.0 functional API (`generate_sd15_pgmap`, `generate_sdxl_pgmap`, `generate_sd3_*`) and the eval CLI are unchanged. The pipeline subclasses wrap these helpers internally — both APIs share the same inner loop.
+- All paper-table reproduction scripts (`scripts/reproduce_table*.sh`) continue to work unchanged.
+
+### Deferred to v1.3 (Phase C)
+
+- Push `sophialan/pg-map-{sd15,sdxl,sd3}` custom-pipeline repos to HuggingFace Hub.
+- Gradio Space + Colab one-click notebook.
+
 ## [v1.1.0] — 2026-05-18
 
 **Foundation for library-shaped distribution.** No behavior change on default settings; all v1.0 reproduction scripts still work unchanged. Lands the prerequisites for Phase B (diffusers pipeline subclasses) and Phase C (HuggingFace Hub push).

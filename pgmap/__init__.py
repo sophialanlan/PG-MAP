@@ -71,7 +71,31 @@ from pgmap_flow_sd3 import (
     load_sd3_models,
 )
 
-__version__ = "1.1.0"
+# ---------------------------------------------------------------------------
+# Diffusers pipeline subclasses (Phase B, v1.2+).
+# Heavyweight diffusers imports are deferred to first use so `import pgmap`
+# stays fast for users who only want config dataclasses or the reward model.
+# ---------------------------------------------------------------------------
+def __getattr__(name):
+    if name in ("PGMAPStableDiffusionPipeline",
+                "PGMAPStableDiffusionXLPipeline",
+                "PGMAPStableDiffusion3Pipeline"):
+        from pgmap.pipelines import (
+            PGMAPStableDiffusionPipeline,
+            PGMAPStableDiffusionXLPipeline,
+            PGMAPStableDiffusion3Pipeline,
+        )
+        cls = {
+            "PGMAPStableDiffusionPipeline":   PGMAPStableDiffusionPipeline,
+            "PGMAPStableDiffusionXLPipeline": PGMAPStableDiffusionXLPipeline,
+            "PGMAPStableDiffusion3Pipeline":  PGMAPStableDiffusion3Pipeline,
+        }[name]
+        globals()[name] = cls
+        return cls
+    raise AttributeError(f"module {__name__!r} has no attribute {name!r}")
+
+
+__version__ = "1.2.0"
 
 __all__ = [
     # config
@@ -106,6 +130,10 @@ __all__ = [
     "load_sd15_models",
     "load_sdxl_models",
     "load_sd3_models",
+    # diffusers pipeline subclasses (lazy-loaded via __getattr__)
+    "PGMAPStableDiffusionPipeline",
+    "PGMAPStableDiffusionXLPipeline",
+    "PGMAPStableDiffusion3Pipeline",
     # meta
     "__version__",
 ]
