@@ -3,6 +3,7 @@
 > **NeurIPS 2026** &middot; Ruolan Sun, Pawel Polak &middot; Stony Brook University
 
 [![Open in Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/sophialanlan/PG-MAP/blob/main/notebooks/colab_pgmap_quickstart.ipynb)
+[![Reproduce figures](https://img.shields.io/badge/Colab-Reproduce%20paper%20figures-success?logo=googlecolab)](https://colab.research.google.com/github/sophialanlan/PG-MAP/blob/main/notebooks/reproduce_paper_figures.ipynb)
 [![HF Space](https://img.shields.io/badge/🤗%20Demo-Gradio%20Space-orange)](https://huggingface.co/spaces/sophialan/pg-map-demo)
 [![HF Pipelines](https://img.shields.io/badge/🤗%20Pipelines-sd15%20%2F%20sdxl%20%2F%20sd3-yellow)](https://huggingface.co/sophialan)
 [![PyPI](https://img.shields.io/badge/PyPI-pg--map-blue)](#)

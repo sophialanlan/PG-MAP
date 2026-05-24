@@ -2,6 +2,31 @@
 
 All notable changes to the public PG-MAP release.
 
+## [v1.5.0] — 2026-05-18
+
+**Paper-figure reproduction notebook.** Single Colab notebook that regenerates Fig 1 (showcase grid) and Fig 2 (trajectory strips + ‖Δc‖/‖Δz‖ plots) end-to-end from scratch using only the public PG-MAP pipelines.
+
+### Added
+
+- **`notebooks/reproduce_paper_figures.ipynb`** — 13-cell Colab-ready notebook:
+  - §1: Fig 1 *pgmap_showcase* — 4 SDXL prompts × (baseline + PG-MAP) → 2×4 grid (`fig1_pgmap_showcase.png`).
+  - §2: Fig 2 (a)+(b) — DDIM trajectory strips at checkpoints {0, 10, 20, 30, 40, 49}: panda MAP-c, galaxy Reward-z (`fig2a_*.png`, `fig2b_*.png`).
+  - §3: Fig 2 (c)+(d) — per-step ‖Δc‖ and ‖Δz‖ norm curves (`fig2cd_delta_norms.png`).
+  - `LITE_MODE=True` toggle halves wall-clock for T4 / low-VRAM cards.
+- **`save_z_traj` hook** in `PGMAPConfig` + `pgmap_sd15.py` + `pgmap_sdxl.py` — when enabled, returns `logs["z_traj_before"]` and `logs["z_traj_after"]` (per-step pre/post-refinement latent snapshots on CPU) so external callers can compute ‖z_t^* - z_t^ddim‖ for diagnostic plots. Symmetric with the existing `save_c_traj`.
+
+### Validated
+
+GPU-tested at $n_\text{steps}=16$ on RTX PRO 6000 Blackwell:
+- `c_traj` shape `(T, B, 77, 2048)` — token-level SDXL conditioning, all timesteps.
+- `z_traj_before` / `z_traj_after` shape `(T, B, 4, 128, 128)` — SDXL latent, fp32, CPU.
+- ‖Δz‖ non-zero during the refinement window (`rho` fraction of steps), exactly 0 outside.
+
+### Maintained / unchanged
+
+- The hooks are **opt-in** (`save_z_traj=False` by default), so existing v1.0-v1.4 reproduction scripts run identically.
+- The notebook depends on `pip install git+https://github.com/sophialanlan/PG-MAP@v1.5.0` (or `pip install pg-map` after PyPI publish).
+
 ## [v1.4.0] — 2026-05-18
 
 **Phase D: ComfyUI custom node bundle.** PG-MAP is now usable in any ComfyUI workflow as a three-node combo (Reward Loader → Config Builder → Sampler).

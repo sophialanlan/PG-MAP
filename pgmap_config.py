@@ -153,6 +153,7 @@ class PGMAPConfig:
     save_progress: bool = False
     save_every: int = 10
     save_c_traj: bool = False
+    save_z_traj: bool = False     # save per-step (z_before_refine, z_after_refine) pairs
 
 
 # ---------------------------------------------------------------------------

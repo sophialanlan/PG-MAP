@@ -337,6 +337,8 @@ def generate_sdxl_pgmap(
     # --- Tracking ---
     c_t = c0.clone()
     c_traj: List[torch.Tensor] = [] if config.save_c_traj else None
+    z_traj_before: List[torch.Tensor] = [] if getattr(config, 'save_z_traj', False) else None
+    z_traj_after:  List[torch.Tensor] = [] if getattr(config, 'save_z_traj', False) else None
     mid_imgs: List[Tuple[int, Image.Image]] = []
     logs: Dict = {}
     _adam_state_c = None  # persistent Adam state for c across denoising steps
@@ -349,6 +351,10 @@ def generate_sdxl_pgmap(
 
         in_refine_phase = (step_i < refine_steps)
         reward_active = (step_i < reward_steps) and config.use_reward
+
+        # Snapshot pre-refinement z_t for the ||Δz|| diagnostic.
+        if z_traj_before is not None:
+            z_traj_before.append(z_t.detach().to(torch.float32).cpu())
 
         if in_refine_phase and (config.optimize_c or config.optimize_z):
             mu_t = patch_sched.tau(c0, step_i=step_i, num_steps=num_steps)
@@ -387,6 +393,9 @@ def generate_sdxl_pgmap(
         # Save conditioning trajectory
         if c_traj is not None:
             c_traj.append(c_t.detach().to(torch.float32))
+        # Snapshot post-refinement z_t (for ||Δz|| = ||z_after - z_before||).
+        if z_traj_after is not None:
+            z_traj_after.append(z_t.detach().to(torch.float32).cpu())
 
         # --- CFG + DDIM update ---
         # When fuse_cfg delivered eps_fused from the inner loop, skip the
@@ -414,6 +423,9 @@ def generate_sdxl_pgmap(
     # --- Build logs ---
     if c_traj is not None:
         logs["c_traj"] = torch.stack(c_traj, dim=0)
+    if z_traj_before is not None and z_traj_after is not None:
+        logs["z_traj_before"] = torch.stack(z_traj_before, dim=0)   # (T, B, C, H, W) fp32 CPU
+        logs["z_traj_after"]  = torch.stack(z_traj_after,  dim=0)
     logs["timesteps"] = timesteps.detach().cpu()
     if mid_imgs:
         logs["mid_imgs"] = mid_imgs
