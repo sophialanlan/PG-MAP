@@ -6,6 +6,7 @@
 [![HF Space](https://img.shields.io/badge/🤗%20Demo-Gradio%20Space-orange)](https://huggingface.co/spaces/sophialan/pg-map-demo)
 [![HF Pipelines](https://img.shields.io/badge/🤗%20Pipelines-sd15%20%2F%20sdxl%20%2F%20sd3-yellow)](https://huggingface.co/sophialan)
 [![PyPI](https://img.shields.io/badge/PyPI-pg--map-blue)](#)
+[![ComfyUI](https://img.shields.io/badge/ComfyUI-Custom%20Node-9cf)](comfyui/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
 [![NeurIPS 2026](https://img.shields.io/badge/NeurIPS-2026-red)](#)
 
@@ -73,6 +74,19 @@ PG-MAP/
 ```
 
 ---
+
+## ComfyUI custom nodes
+
+A drop-in ComfyUI bundle lives at [`comfyui/`](comfyui/) — three nodes (Reward Loader → Config Builder → Sampler) for practitioner workflows. Install:
+
+```bash
+cd ComfyUI/custom_nodes
+git clone https://github.com/sophialanlan/PG-MAP pg-map
+ln -s pg-map/comfyui pg-map-nodes
+pip install pg-map>=1.3.0      # inside ComfyUI's Python environment
+```
+
+Restart ComfyUI; nodes appear under the **PG-MAP** category. Sample workflow at [`comfyui/workflows/pgmap_sdxl_basic.json`](comfyui/workflows/pgmap_sdxl_basic.json). Full walkthrough in [comfyui/README.md](comfyui/README.md).
 
 ## One-line drop-in (HuggingFace Hub custom pipelines)
 

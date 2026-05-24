@@ -2,6 +2,30 @@
 
 All notable changes to the public PG-MAP release.
 
+## [v1.4.0] — 2026-05-18
+
+**Phase D: ComfyUI custom node bundle.** PG-MAP is now usable in any ComfyUI workflow as a three-node combo (Reward Loader → Config Builder → Sampler).
+
+### Added
+
+- **`comfyui/__init__.py`** registering three nodes under the `PG-MAP` category:
+  - **PG-MAP Reward Loader** — loads PickScore / HPS / Aesthetic / CLIP / ImageReward; outputs a `PGMAP_REWARD` socket.
+  - **PG-MAP Config Builder** — exposes the full hyperparameter surface ($\lambda$, $\eta_z$, $\eta_c$, $K$, $\rho$, $\rho_Q$, $\sigma_c$, $\gamma$ + 3 ablation booleans); outputs a `PGMAP_CONFIG` socket.
+  - **PG-MAP Sampler** — accepts prompts, seed/steps/cfg/dims, plus optional `PGMAP_CONFIG` / `PGMAP_REWARD`; loads the official `sophialan/pg-map-{sd15,sdxl,sd3}` pipeline from HF Hub (cached per-process); outputs a ComfyUI `IMAGE` tensor.
+- **`comfyui/workflows/pgmap_sdxl_basic.json`** — drag-drop sample workflow: three PG-MAP nodes + PreviewImage. Loads PickScore reward, builds the SDXL paper-default config (λ=0.10, η_z=0.005, K=2, ρ=0.5), samples at seed 42.
+- **`comfyui/README.md`** — full walkthrough: install (two options), node reference, VRAM expectations per backbone, design rationale for not reusing ComfyUI's `MODEL` type.
+- **Top-level README** — ComfyUI install section + `Custom Node` badge.
+
+### Maintained / unchanged
+
+- The ComfyUI nodes load their own self-contained diffusers pipeline (via the `sophialan/pg-map-*` HF Hub custom-pipeline mechanism shipped in v1.3.0). Behavior is bit-identical to the PyPI / HF Hub flow — no code duplication.
+- All v1.0–v1.3 APIs unchanged.
+
+### Notes
+
+- Cost: ~5 GB extra VRAM when a vanilla ComfyUI pipeline is loaded alongside (one extra UNet copy). Disable PG-MAP by leaving the config/reward inputs disconnected to fall back to vanilla sampling.
+- The ComfyUI Manager registry submission ([github.com/ltdrdata/ComfyUI-Manager](https://github.com/ltdrdata/ComfyUI-Manager)) is a separate PR — pending camera-ready.
+
 ## [v1.3.0] — 2026-05-18
 
 **Phase C: HuggingFace Hub outreach.** Custom-pipeline repos published, Gradio Space deployed, Colab quickstart shipped. PG-MAP is now a one-argument change to any existing diffusers stack.

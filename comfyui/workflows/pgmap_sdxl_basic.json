@@ -1,0 +1,84 @@
+{
+  "last_node_id": 5,
+  "last_link_id": 4,
+  "nodes": [
+    {
+      "id": 1,
+      "type": "PGMAPRewardLoader",
+      "pos": [40, 60],
+      "size": [320, 110],
+      "flags": {},
+      "order": 0,
+      "mode": 0,
+      "inputs": [],
+      "outputs": [
+        {"name": "reward", "type": "PGMAP_REWARD", "links": [1]}
+      ],
+      "properties": {"Node name for S&R": "PGMAPRewardLoader"},
+      "widgets_values": ["pickscore", "cuda"]
+    },
+    {
+      "id": 2,
+      "type": "PGMAPConfigBuilder",
+      "pos": [40, 230],
+      "size": [340, 360],
+      "flags": {},
+      "order": 1,
+      "mode": 0,
+      "inputs": [],
+      "outputs": [
+        {"name": "config", "type": "PGMAP_CONFIG", "links": [2]}
+      ],
+      "properties": {"Node name for S&R": "PGMAPConfigBuilder"},
+      "widgets_values": ["sdxl", 0.1, 0.005, 0.001, 2, 0.5, 0.3, 1.0, 1.0, true, true, true]
+    },
+    {
+      "id": 3,
+      "type": "PGMAPSampler",
+      "pos": [430, 60],
+      "size": [430, 520],
+      "flags": {},
+      "order": 2,
+      "mode": 0,
+      "inputs": [
+        {"name": "config", "type": "PGMAP_CONFIG", "link": 2},
+        {"name": "reward", "type": "PGMAP_REWARD", "link": 1}
+      ],
+      "outputs": [
+        {"name": "image", "type": "IMAGE", "links": [3]}
+      ],
+      "properties": {"Node name for S&R": "PGMAPSampler"},
+      "widgets_values": [
+        "sdxl",
+        "a phoenix rising from ashes, vivid orange and red feathers, dramatic lighting",
+        "blurry, low quality",
+        42, 50, 5.0, 1024, 1024
+      ]
+    },
+    {
+      "id": 4,
+      "type": "PreviewImage",
+      "pos": [910, 60],
+      "size": [400, 400],
+      "flags": {},
+      "order": 3,
+      "mode": 0,
+      "inputs": [
+        {"name": "images", "type": "IMAGE", "link": 3}
+      ],
+      "properties": {"Node name for S&R": "PreviewImage"}
+    }
+  ],
+  "links": [
+    [1, 1, 0, 3, 1, "PGMAP_REWARD"],
+    [2, 2, 0, 3, 0, "PGMAP_CONFIG"],
+    [3, 3, 0, 4, 0, "IMAGE"]
+  ],
+  "groups": [],
+  "config": {},
+  "extra": {
+    "ds": {"scale": 1.0, "offset": [0, 0]},
+    "comment": "PG-MAP basic SDXL workflow: load PickScore reward, build paper-default config, sample at seed 42. Replace PreviewImage with SaveImage to persist to ComfyUI/output/."
+  },
+  "version": 0.4
+}
