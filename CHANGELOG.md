@@ -2,6 +2,19 @@
 
 All notable changes to the public PG-MAP release.
 
+## [v1.5.2] — 2026-05-25
+
+**T2I-CompBench++ eval pipeline: add `mapc` method.**
+
+Extends [eval/t2i_compbench/generate.py](eval/t2i_compbench/generate.py) with a `mapc` method choice (conditioning-only MAP refinement, $K{=}1$, no reward) alongside the existing `baseline_sdxl`, `pgmap_K1`, `pgmap_K2`, and `pgmap_K2_tcfg` choices. Lets users exercise the conditioning-only specialization of the framework directly on the T2I-CompBench prompt set.
+
+```bash
+python eval/t2i_compbench/generate.py \
+    --method mapc --backbone sdxl \
+    --categories color shape texture \
+    --out_dir eval_results/t2i_compbench/sdxl_mapc
+```
+
 ## [v1.5.0] — 2026-05-18
 
 **Paper-figure reproduction notebook.** Single Colab notebook that regenerates Fig 1 (showcase grid) and Fig 2 (trajectory strips + ‖Δc‖/‖Δz‖ plots) end-to-end from scratch using only the public PG-MAP pipelines.

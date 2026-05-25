@@ -20,6 +20,9 @@ Usage::
 
 Methods:
     baseline_sdxl  — vanilla SDXL (no PG-MAP), reference run.
+    mapc           — Conditioning-only MAP refinement (optimize_c, no z, no reward).
+                     Paper's predicted attribute-binding winner (paper §3:
+                     "strongest on attribute-binding and short / typography prompts").
     pgmap_K1       — SDXL PG-MAP, K_inner=1 (~5x faster than K=2, ~25% smaller win-rates).
     pgmap_K2       — SDXL PG-MAP, paper default K_inner=2.
     pgmap_K2_tcfg  — SDXL Tuned-CFG (w=7.5) + PG-MAP K_inner=2 (highest HPS/Aesthetic).
@@ -85,7 +88,15 @@ def build_config(method: str, backbone: str, seed: int):
     cfg.seed = seed
     cfg.prior = PriorConfig(sigma_c=1.0, gamma=1.0)
 
-    if method == "pgmap_K1":
+    if method == "mapc":
+        # Conditioning-only MAP, no reward — paper's attribute-binding pick.
+        # K=1 to match the cost of pgmap_K1 (single inner step).
+        cfg.refinement = RefinementConfig(K=1, eta_c=1e-3, eta_z=0.0)
+        cfg.reward = RewardConfig(lambda_reward=0.0, rho_Q=0.0, grad_norm_strategy="unit")
+        cfg.optimize_c = True
+        cfg.optimize_z = False
+        cfg.use_reward = False
+    elif method == "pgmap_K1":
         cfg.refinement = RefinementConfig(K=1, eta_c=1e-3, eta_z=5e-3)
         cfg.reward = RewardConfig(lambda_reward=0.1, rho_Q=0.3, grad_norm_strategy="unit")
     elif method == "pgmap_K2":
@@ -103,7 +114,7 @@ def build_config(method: str, backbone: str, seed: int):
 def main():
     ap = argparse.ArgumentParser(description="Generate images for T2I-CompBench++ eval")
     ap.add_argument("--method", required=True,
-                    choices=["baseline_sdxl", "pgmap_K1", "pgmap_K2", "pgmap_K2_tcfg"])
+                    choices=["baseline_sdxl", "mapc", "pgmap_K1", "pgmap_K2", "pgmap_K2_tcfg"])
     ap.add_argument("--backbone", default="sdxl", choices=["sd15", "sdxl"])
     ap.add_argument("--categories", nargs="+", required=True,
                     choices=["color", "shape", "texture", "spatial",
