@@ -2,7 +2,7 @@ table: 1
 row: "Baseline (reference)"
 backbone: sd15
 method: baseline
-model_id: runwayml/stable-diffusion-v1-5
+model_id: stable-diffusion-v1-5/stable-diffusion-v1-5
 num_prompts: 1632
 seed: 123
 

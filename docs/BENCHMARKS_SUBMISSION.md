@@ -26,8 +26,8 @@ The eval results (when run) land in [`eval_results/t2i_compbench/`](../eval_resu
 | Field | Value |
 |---|---|
 | Paper title | PG-MAP: Joint MAP Optimization for Inference-Time Alignment of Diffusion and Flow-Matching Models |
-| Paper URL | https://openreview.net/forum?id=PLACEHOLDER (replace with NeurIPS 2026 OpenReview ID at camera-ready) |
-| ArXiv ID | TBD (post-acceptance) |
+| Paper URL | https://openreview.net/forum?id=PLACEHOLDER (replace with NeurIPS 2026 OpenReview ID once available) |
+| ArXiv ID | TBD (once available) |
 | Code | https://github.com/sophialanlan/PG-MAP |
 | Model name | **PG-MAP (SDXL, default)** |
 | Model URL | https://huggingface.co/sophialan/pg-map-sdxl |
@@ -52,7 +52,7 @@ PwC stores results as model-level rows, so the recommended **single submission**
 
 ### 1.B — Submit to `text-to-image-generation-on-hpdv2`
 
-Same template; HPDv2 results live in `eval_results/hpdv2_sdxl/` after the optional `bash scripts/reproduce_hpdv2.sh` run. The paper reports that PartiPrompts numbers transfer to HPDv2 within $\pm 2$ pp (paper §3 paragraph "Robustness on HPDv2"); use those as conservative submission values until the full HPDv2 run completes.
+Same template; HPDv2 reproduction is not yet scripted in this repo (raw HPDv2 results are available on request). The paper reports that PartiPrompts numbers transfer to HPDv2 within $\pm 2$ pp (paper §3 paragraph "Robustness on HPDv2"); use those as conservative submission values until the full HPDv2 run is available.
 
 ---
 
@@ -62,7 +62,7 @@ The maintainers (HKU + Huawei Noah's Ark) update the leaderboard in their [Readm
 
 1. Run their official eval scripts locally on your generated samples.
 2. Report the per-category scores in your paper / supplementary.
-3. Open a **GitHub issue** at [Karine-Huang/T2I-CompBench/issues](https://github.com/Karine-Huang/T2I-CompBench/issues) titled `"Leaderboard submission: PG-MAP (NeurIPS 2026)"` containing the table below + a link to your paper.
+3. Open a **GitHub issue** at [Karine-Huang/T2I-CompBench/issues](https://github.com/Karine-Huang/T2I-CompBench/issues) titled `"Leaderboard submission: PG-MAP (under review, NeurIPS 2026)"` containing the table below + a link to your paper.
 
 ### 2.A — Generate images
 
@@ -94,7 +94,7 @@ bash eval/t2i_compbench/run_blip_vqa.sh eval_results/t2i_compbench/sdxl_pgmap_K2
 # Aggregate to a single row
 python eval/t2i_compbench/aggregate.py \
     --samples_root eval_results/t2i_compbench/sdxl_pgmap_K2 \
-    --method "SDXL + PG-MAP (Ours, NeurIPS 2026)" \
+    --method "SDXL + PG-MAP (Ours, under review, NeurIPS 2026)" \
     --out eval_results/t2i_compbench/sdxl_pgmap_K2.json
 ```
 
@@ -103,11 +103,11 @@ The aggregator prints a leaderboard-ready markdown row.
 ### 2.C — Issue template
 
 ```markdown
-**Title:** Leaderboard submission: PG-MAP (NeurIPS 2026)
+**Title:** Leaderboard submission: PG-MAP (under review, NeurIPS 2026)
 
 Hi T2I-CompBench team,
 
-We're submitting evaluation results for **PG-MAP** (Preference-Guided Adaptive MAP), a training-free inference-time alignment method on SDXL, accepted at NeurIPS 2026.
+We're submitting evaluation results for **PG-MAP** (Preference-Guided Adaptive MAP), a training-free inference-time alignment method on SDXL; preprint, under review at NeurIPS 2026.
 
 | Method | Color ↑ | Shape ↑ | Texture ↑ | 2D-Spatial ↑ | Non-Spatial ↑ | Complex ↑ |
 |---|---|---|---|---|---|---|
@@ -136,12 +136,13 @@ The [Artificial Analysis Text-to-Image leaderboard](https://huggingface.co/space
 
 ```
 To:      research@artificialanalysis.ai
-Subject: PG-MAP (NeurIPS 2026) — inference-time alignment for SDXL / SD3.5
+Subject: PG-MAP (under review, NeurIPS 2026) — inference-time alignment for SDXL / SD3.5
 
 Hi Artificial Analysis team,
 
-We just published PG-MAP at NeurIPS 2026, a training-free inference-time
-alignment method that wraps SDXL / SD3.5 and lifts PickScore win-rate by
+We recently released PG-MAP, a training-free inference-time (preprint;
+under review at NeurIPS 2026) alignment method that wraps SDXL / SD3.5 and
+lifts PickScore win-rate by
 +6 pp on SDXL and +42 pp on SD3.5-medium versus the static base model
 on PartiPrompts (n=1632).
 

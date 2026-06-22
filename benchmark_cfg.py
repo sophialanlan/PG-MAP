@@ -84,7 +84,7 @@ def load_models(backbone: str, device: str, dtype: torch.dtype):
         return load_sdxl_models("stabilityai/stable-diffusion-xl-base-1.0", device, dtype)
     else:
         from pgmap_sd15 import load_sd15_models
-        return load_sd15_models("runwayml/stable-diffusion-v1-5", device, dtype)
+        return load_sd15_models("stable-diffusion-v1-5/stable-diffusion-v1-5", device, dtype)
 
 
 # ── generation ───────────────────────────────────────────────────────────────

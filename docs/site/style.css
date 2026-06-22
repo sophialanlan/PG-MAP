@@ -1,4 +1,4 @@
-/* PG-MAP anonymous project page — single-file CSS, no external deps. */
+/* PG-MAP project page — single-file CSS, no external deps. */
 
 :root {
   --fg:           #1c1f24;
@@ -80,7 +80,7 @@ body {
   background: var(--accent-soft);
   transform: translateY(-1px);
 }
-.anonymous-note {
+.page-note {
   font-family: var(--sans);
   font-size: 0.85rem;
   color: var(--fg-faint);

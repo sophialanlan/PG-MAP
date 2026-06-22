@@ -13,13 +13,13 @@ Usage::
 
     # Option A: instantiate the subclass directly
     pipe = PGMAPStableDiffusionPipeline.from_pretrained(
-        "runwayml/stable-diffusion-v1-5",
+        "stable-diffusion-v1-5/stable-diffusion-v1-5",
         torch_dtype=torch.float16,
     ).to("cuda")
 
-    # Option B: HF community-pipeline registry (Phase C — pending publish)
+    # Option B: HF community-pipeline registry
     # pipe = DiffusionPipeline.from_pretrained(
-    #     "runwayml/stable-diffusion-v1-5",
+    #     "stable-diffusion-v1-5/stable-diffusion-v1-5",
     #     custom_pipeline="sophialan/pg-map-sd15",
     #     torch_dtype=torch.float16,
     # )

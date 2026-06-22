@@ -50,7 +50,7 @@ def smoke_sd15():
     print("      loading SD 1.5 (cached HF model)...")
     t0 = time.time()
     pipe = PGMAPStableDiffusionPipeline.from_pretrained(
-        "runwayml/stable-diffusion-v1-5",
+        "stable-diffusion-v1-5/stable-diffusion-v1-5",
         torch_dtype=torch.float16,
         safety_checker=None,
         requires_safety_checker=False,

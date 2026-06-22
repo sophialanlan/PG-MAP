@@ -134,7 +134,7 @@ def main():
     if not args.skip_gen:
         print("[INFO] Loading SD1.5 models")
         models = load_sd15_models(
-            "runwayml/stable-diffusion-v1-5",
+            "stable-diffusion-v1-5/stable-diffusion-v1-5",
             device="cuda", dtype=torch.float16,
         )
         print("[INFO] Loading PickScore reward model")

@@ -30,9 +30,11 @@ PG-MAP wins **every** comparison. The largest lift ($\sim 2{:}1$) is against com
 
 ## Reproducing the pair pool
 
-The 62-prompt subset is a deterministic build from PartiPrompts seed 123:
+The 62-prompt subset is a deterministic build from PartiPrompts seed 123. The builder
+(`eval.build_human_eval_pairs`) is available on request; it is invoked as:
 
 ```bash
+# builder available on request — not shipped in this repo
 python -m eval.build_human_eval_pairs \
     --seed 123 \
     --n 62 \
@@ -40,7 +42,7 @@ python -m eval.build_human_eval_pairs \
     --output data/human_eval_pairs.json
 ```
 
-(The actual rater session JSON is not redistributed because it contains IP-style timestamps; only the pair pool is in the repo.)
+(The actual rater session JSON is not redistributed because it contains IP-style timestamps; the pair pool itself is available on request, not committed here.)
 
 ## Reproducing the candidate images
 
@@ -55,7 +57,7 @@ So Table 3 is implicitly reproduced once `bash scripts/reproduce_table1_sdxl.sh`
 
 ## Rater interface
 
-The volunteer study used a minimal browser-based two-image picker. We do not redistribute the live deployment, but the static HTML template is included at `data/human_eval_template.html` for adaptation; the layout is standard (two images side-by-side, three-button vote, persistent rater id in localStorage).
+The volunteer study used a minimal browser-based two-image picker. We do not redistribute the live deployment, but the static HTML template (`data/human_eval_template.html`) is available on request for adaptation; the layout is standard (two images side-by-side, three-button vote, persistent rater id in localStorage).
 
 ## Bias notes
 

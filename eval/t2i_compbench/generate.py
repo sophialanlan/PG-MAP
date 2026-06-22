@@ -137,7 +137,7 @@ def main():
     print("[load] PG-MAP pipeline + reward model...")
     if args.backbone == "sd15":
         from pgmap_sd15 import generate_sd15_baseline, generate_sd15_pgmap, load_sd15_models
-        models = load_sd15_models("runwayml/stable-diffusion-v1-5", dtype=torch.float16)
+        models = load_sd15_models("stable-diffusion-v1-5/stable-diffusion-v1-5", dtype=torch.float16)
         gen_pgmap = generate_sd15_pgmap
         gen_baseline = generate_sd15_baseline
     else:

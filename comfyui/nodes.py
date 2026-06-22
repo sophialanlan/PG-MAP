@@ -47,7 +47,7 @@ def _load_pipeline(backbone: str, device: str = "cuda"):
     from diffusers import DiffusionPipeline
 
     spec = {
-        "sd15": ("runwayml/stable-diffusion-v1-5", "sophialan/pg-map-sd15", {}),
+        "sd15": ("stable-diffusion-v1-5/stable-diffusion-v1-5", "sophialan/pg-map-sd15", {}),
         "sdxl": ("stabilityai/stable-diffusion-xl-base-1.0", "sophialan/pg-map-sdxl",
                   {"variant": "fp16"}),
         "sd3":  ("stabilityai/stable-diffusion-3.5-medium", "sophialan/pg-map-sd3", {}),

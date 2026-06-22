@@ -1,6 +1,6 @@
 # PG-MAP for ComfyUI
 
-ComfyUI custom node bundle for **PG-MAP** (Preference-Guided Adaptive MAP, NeurIPS 2026). Drop PG-MAP into any ComfyUI workflow as a three-node combo: load a reward model, build a config, then sample.
+ComfyUI custom node bundle for **PG-MAP** (Preference-Guided Adaptive MAP; preprint, under review at NeurIPS 2026). Drop PG-MAP into any ComfyUI workflow as a three-node combo: load a reward model, build a config, then sample.
 
 ## Install
 
@@ -10,9 +10,9 @@ ComfyUI custom node bundle for **PG-MAP** (Preference-Guided Adaptive MAP, NeurI
 cd ComfyUI/custom_nodes
 git clone https://github.com/sophialanlan/PG-MAP pg-map
 cd pg-map
-pip install -e .                 # install the pg-map python package
-# OR (if you've already pip-installed pg-map elsewhere)
-pip install pg-map>=1.3.0
+pip install -e .                 # install the pgmap-align python package
+# OR (if you've already pip-installed pgmap-align elsewhere)
+pip install pgmap-align>=1.5.0
 ```
 
 Then **link the `comfyui/` subdirectory** so ComfyUI picks it up as a custom node:
@@ -30,7 +30,7 @@ If you already have the PG-MAP repo cloned somewhere else:
 
 ```bash
 ln -s /path/to/PG-MAP/comfyui ComfyUI/custom_nodes/pg-map-nodes
-pip install pg-map>=1.3.0
+pip install pgmap-align>=1.5.0
 ```
 
 ## Nodes
@@ -64,11 +64,12 @@ PG-MAP's reward backward through the VAE is the VRAM bottleneck. The default K=2
 ## Citation
 
 ```bibtex
-@inproceedings{sun2026pgmap,
+@misc{sun2026pgmap,
   title={{PG-MAP}: Joint {MAP} Optimization for Inference-Time Alignment of Diffusion and Flow-Matching Models},
   author={Sun, Ruolan and Polak, Pawel},
-  booktitle={NeurIPS},
-  year={2026}
+  year={2026},
+  note={Preprint; under review at NeurIPS 2026},
+  url={https://github.com/sophialanlan/PG-MAP}
 }
 ```
 

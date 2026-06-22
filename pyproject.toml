@@ -3,9 +3,9 @@ requires = ["setuptools>=68", "wheel"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "pg-map"
+name = "pgmap-align"
 version = "1.5.2"
-description = "PG-MAP: Joint MAP Optimization for Inference-Time Alignment of Diffusion and Flow-Matching Models (NeurIPS 2026)"
+description = "PG-MAP: Joint MAP Optimization for Inference-Time Alignment of Diffusion and Flow-Matching Models (preprint; under review at NeurIPS 2026)"
 readme = "README.md"
 license = { file = "LICENSE" }
 requires-python = ">=3.10"
@@ -20,7 +20,6 @@ keywords = [
     "preference-optimization",
     "text-to-image",
     "stable-diffusion",
-    "neurips-2026",
 ]
 classifiers = [
     "Intended Audience :: Science/Research",
@@ -110,9 +109,10 @@ py-modules = [
 include = ["pgmap*", "utils*", "eval*"]
 exclude = ["tests*", "scripts*", "configs*", "docs*", "data*", "flowchef_baseline*", "logs*", "eval_results*"]
 
-# Include the small bundled aesthetic checkpoint, HPS BPE, and YAML configs in
-# the wheel. The 1.9 GB HPS checkpoint stays out of distribution (download via
-# scripts/download_hps.sh).
+# Include the small bundled aesthetic checkpoint and HPS BPE in the wheel. The
+# 1.9 GB HPS checkpoint stays out of distribution (download via
+# scripts/download_hps.sh). The per-table YAML configs ship with the git clone
+# (repo-root configs/), not the wheel.
 [tool.setuptools.package-data]
 utils = [
     "aesthetics_model/*.pth",
@@ -120,7 +120,7 @@ utils = [
     "open_clip/model_configs/*.json",
     "open_clip/bpe_simple_vocab_16e6.txt.gz",
 ]
-pgmap = ["configs/**/*.yaml", "py.typed"]
+pgmap = ["py.typed"]
 
 [tool.setuptools.exclude-package-data]
 "*" = ["__pycache__/*", "*.pyc", "*.bak"]

@@ -106,7 +106,7 @@ with one-sided Wilcoxon $p < 10^{-100}$ on PickScore and HPS.
 
 ## Table 3: Human evaluation
 
-The human-eval study is **not** automatically reproduced — it requires running the [human-eval-site](https://github.com/) volunteer study. Study materials, IRB exempt status documentation, and tie-rate breakdown are in [docs/HUMAN_EVAL.md](HUMAN_EVAL.md). The 62-prompt pair pool used in the paper is committed under `data/human_eval_pairs.json` (deterministic build via `python -m eval.build_human_eval_pairs`).
+The human-eval study is **not** automatically reproduced — it requires running the volunteer human-eval site (the live deployment is not redistributed). Study materials, IRB exempt status documentation, and tie-rate breakdown are in [docs/HUMAN_EVAL.md](HUMAN_EVAL.md). The 62-prompt pair pool used in the paper is deterministic given the master seed; the pair pool and its builder are available on request.
 
 If you only need to reproduce the table's PG-MAP candidate images (the LHS of each pair), they are the SDXL PG-MAP row from Table 1 — already produced by `bash scripts/reproduce_table1_sdxl.sh`. The three RHS baselines (SDXL static / Tuned-CFG / NFE-matched UG) are also already in `eval_results/table1_sdxl/`.
 

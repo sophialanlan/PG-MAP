@@ -21,9 +21,10 @@ Both styles work — the flat modules remain installed at the top level so
 existing callers (research scripts, the eval CLI, the reproduce_*.sh scripts)
 do not break.
 
-Phase B will add ``PGMAPStableDiffusionPipeline`` etc. as proper
-``diffusers.DiffusionPipeline`` subclasses. The version here is the v1.1
-foundation: configs, reward protocol, and re-exports.
+``PGMAPStableDiffusionPipeline`` etc. ship as proper
+``diffusers.DiffusionPipeline`` subclasses under ``pgmap.pipelines``. The
+version here tracks the package version (1.5.2): configs, reward protocol,
+and re-exports.
 """
 from __future__ import annotations
 
@@ -58,8 +59,8 @@ from pgmap_reward import FrozenRewardModel, RewardModel
 from pgmap_core import pgmap_refine_step
 
 # ---------------------------------------------------------------------------
-# Backbone-specific procedural pipelines (current API; subclassed Pipelines
-# arrive in v1.2 under Phase B without breaking these).
+# Backbone-specific procedural pipelines (the diffusers ``DiffusionPipeline``
+# subclasses in ``pgmap.pipelines`` coexist with these without breaking them).
 # ---------------------------------------------------------------------------
 from pgmap_sd15 import SD15Models, generate_sd15_pgmap, load_sd15_models
 from pgmap_sdxl import SDXLModels, generate_sdxl_pgmap, load_sdxl_models
@@ -72,7 +73,7 @@ from pgmap_flow_sd3 import (
 )
 
 # ---------------------------------------------------------------------------
-# Diffusers pipeline subclasses (Phase B, v1.2+).
+# Diffusers pipeline subclasses (available in ``pgmap.pipelines``).
 # Heavyweight diffusers imports are deferred to first use so `import pgmap`
 # stays fast for users who only want config dataclasses or the reward model.
 # ---------------------------------------------------------------------------

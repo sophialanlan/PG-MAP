@@ -14,7 +14,7 @@ denoiser that ComfyUI's wrapped MODEL type does not expose. This costs
 roughly one extra UNet copy in VRAM when a vanilla ComfyUI pipeline is
 loaded alongside.
 
-Requires: ``pip install pg-map>=1.3.0`` inside the ComfyUI Python environment.
+Requires: ``pip install pgmap-align>=1.5.0`` inside the ComfyUI Python environment.
 
 See ``comfyui/README.md`` for the full install walkthrough and the
 ``comfyui/workflows/pgmap_sdxl_basic.json`` sample workflow.

@@ -29,8 +29,8 @@ arguments to ``__call__``:
         ``pg_map_config.reward.model_name``.
 
 For the HuggingFace community-pipeline registry, single-file mirrors of
-these classes will be published under ``sophialan/pg-map-{sd15,sdxl,sd3}``
-in Phase C so users can do::
+these classes are published under ``sophialan/pg-map-{sd15,sdxl,sd3}``
+so users can do::
 
     pipe = DiffusionPipeline.from_pretrained(
         "stabilityai/stable-diffusion-xl-base-1.0",

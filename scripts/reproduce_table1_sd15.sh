@@ -29,7 +29,7 @@ banner "Reproducing Table 1 — SD 1.5 — output: ${OUT_DIR}"
 # ---------------------------------------------------------------------------
 pgmap_eval \
     --backbone sd15 \
-    --model_id runwayml/stable-diffusion-v1-5 \
+    --model_id stable-diffusion-v1-5/stable-diffusion-v1-5 \
     --num_prompts 1632 \
     --seed 123 \
     --methods baseline mapc reward_z joint_cz pgmap \

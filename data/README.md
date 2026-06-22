@@ -31,13 +31,14 @@ The first 10 prompts (for sanity-checking your install):
 The 62 PartiPrompts used in the Table 3 human study are a deterministic subset:
 
 ```bash
-python eval/build_human_eval_pairs.py \
+# builder available on request — not shipped in this repo
+python -m eval.build_human_eval_pairs \
     --seed 123 --n 62 \
     --strata "Concrete,Abstract,Symbolic,Style" \
     --output data/human_eval_pairs.json
 ```
 
-(Builder script is shipped on request; the pair list itself is reproducible from the seed.)
+(The builder script `eval.build_human_eval_pairs` is available on request; the resulting `data/human_eval_pairs.json` is not committed here but is reproducible from the seed.)
 
 ## Custom prompts
 

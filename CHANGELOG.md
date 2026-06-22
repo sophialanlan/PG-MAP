@@ -38,7 +38,7 @@ GPU-tested at $n_\text{steps}=16$ on RTX PRO 6000 Blackwell:
 ### Maintained / unchanged
 
 - The hooks are **opt-in** (`save_z_traj=False` by default), so existing v1.0-v1.4 reproduction scripts run identically.
-- The notebook depends on `pip install git+https://github.com/sophialanlan/PG-MAP@v1.5.0` (or `pip install pg-map` after PyPI publish).
+- The notebooks install PG-MAP from its published PyPI release (`pip install pgmap-align`).
 
 ## [v1.4.0] — 2026-05-18
 
@@ -62,7 +62,7 @@ GPU-tested at $n_\text{steps}=16$ on RTX PRO 6000 Blackwell:
 ### Notes
 
 - Cost: ~5 GB extra VRAM when a vanilla ComfyUI pipeline is loaded alongside (one extra UNet copy). Disable PG-MAP by leaving the config/reward inputs disconnected to fall back to vanilla sampling.
-- The ComfyUI Manager registry submission ([github.com/ltdrdata/ComfyUI-Manager](https://github.com/ltdrdata/ComfyUI-Manager)) is a separate PR — pending camera-ready.
+- The ComfyUI Manager registry submission ([github.com/ltdrdata/ComfyUI-Manager](https://github.com/ltdrdata/ComfyUI-Manager)) is a separate PR — planned.
 
 ## [v1.3.0] — 2026-05-18
 
@@ -75,7 +75,7 @@ GPU-tested at $n_\text{steps}=16$ on RTX PRO 6000 Blackwell:
   - [`sophialan/pg-map-sdxl`](https://huggingface.co/sophialan/pg-map-sdxl) — SDXL
   - [`sophialan/pg-map-sd3`](https://huggingface.co/sophialan/pg-map-sd3) — SD3.5-medium (UG-FM default)
   Loadable via `DiffusionPipeline.from_pretrained(..., custom_pipeline="sophialan/pg-map-sdxl")`. End-to-end validated on RTX PRO 6000.
-- **Gradio Space** [`sophialan/pg-map-demo`](https://huggingface.co/spaces/sophialan/pg-map-demo) — backbone dropdown (SD 1.5 / SDXL / SD3.5), prompt input, hyperparameter sliders for λ / η_z / K. Single-file `app.py` plus pinned `pg-map@v1.2.0` dependency. Currently on the free CPU tier — upgrade to A10G in Settings → Hardware for inference speed.
+- **Gradio Space** [`sophialan/pg-map-demo`](https://huggingface.co/spaces/sophialan/pg-map-demo) — backbone dropdown (SD 1.5 / SDXL / SD3.5), prompt input, hyperparameter sliders for λ / η_z / K. Single-file `app.py` plus pinned `pgmap-align==1.5.2` dependency (to be applied when the Space is redeployed). Currently on the free CPU tier — upgrade to A10G in Settings → Hardware for inference speed.
 - **Colab quickstart** at [`notebooks/colab_pgmap_quickstart.ipynb`](notebooks/colab_pgmap_quickstart.ipynb) — installs PG-MAP, loads SD 1.5 via the HF custom pipeline, generates side-by-side vanilla vs PG-MAP, sweeps $\lambda$. Optional SDXL and SD3.5-medium sections. Runs in ~5 minutes on a free T4.
 - **README badges** for the Colab notebook, the Space, the HF custom pipelines, and the (forthcoming) PyPI release.
 
@@ -109,7 +109,7 @@ from pgmap import sd15_defaults, FrozenRewardModel
 import torch
 
 pipe = PGMAPStableDiffusionPipeline.from_pretrained(
-    "runwayml/stable-diffusion-v1-5",
+    "stable-diffusion-v1-5/stable-diffusion-v1-5",
     torch_dtype=torch.float16,
     safety_checker=None,
 ).to("cuda")
@@ -146,7 +146,7 @@ image = pipe("a phoenix rising from ashes").images[0]   # vanilla SD 1.5
 
 ### Added
 
-- **`pyproject.toml`** — `pip install -e .` now works; `pg-map` is installable from a local checkout and ready for PyPI publication. Console script `pgmap-eval` exposed as a proper entry point.
+- **`pyproject.toml`** — `pip install -e .` now works; `pgmap-align` is installable from a local checkout and ready for PyPI publication. Console script `pgmap-eval` exposed as a proper entry point.
 - **`pgmap/` package facade** — single-namespace re-exports of the flat research modules. Users can now write `from pgmap import PGMAPConfig, FrozenRewardModel, sd15_defaults` instead of the per-module imports. The flat `pgmap_*.py` modules remain importable, so v1.0 callers do not break.
 - **`RewardModel` Protocol** in [pgmap_reward.py](pgmap_reward.py) — structural typing protocol with the `.score(pixel_values, prompt) -> Tensor[B]` signature. External rewards no longer need to subclass `FrozenRewardModel`; implementing the protocol is enough. Verified with `isinstance(my_reward, RewardModel)` at runtime.
 - **`--mixed_precision {no,fp16,bf16}`** flag in `pgmap_eval.py` — accelerate-style alias for `--dtype`. Plugs cleanly into HuggingFace `accelerate launch` configs.
@@ -166,7 +166,7 @@ image = pipe("a phoenix rising from ashes").images[0]   # vanilla SD 1.5
 
 ## [v1.0-neurips2026] — 2026-05-18
 
-Initial public release accompanying the NeurIPS 2026 paper *"PG-MAP: Joint MAP Optimization for Inference-Time Alignment of Diffusion and Flow-Matching Models"*.
+Initial public release accompanying the PG-MAP preprint (under review at NeurIPS 2026) *"PG-MAP: Joint MAP Optimization for Inference-Time Alignment of Diffusion and Flow-Matching Models"*.
 
 ### Included
 

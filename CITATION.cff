@@ -1,6 +1,6 @@
 cff-version: 1.2.0
 title: "PG-MAP: Joint MAP Optimization for Inference-Time Alignment of Diffusion and Flow-Matching Models"
-message: "If you use this code, please cite the accompanying NeurIPS 2026 paper."
+message: "If you use this code, please cite the accompanying PG-MAP preprint (under review at NeurIPS 2026)."
 type: software
 authors:
   - family-names: Sun
@@ -11,18 +11,18 @@ authors:
     given-names: Pawel
     email: pawel.polak@stonybrook.edu
     affiliation: Stony Brook University
-version: "v1.0-neurips2026"
-date-released: "2026-05-18"
+version: "1.5.2"
+date-released: "2026-05-25"
 license: MIT
 repository-code: "https://github.com/sophialanlan/PG-MAP"
 preferred-citation:
-  type: conference-paper
+  type: misc
   title: "PG-MAP: Joint MAP Optimization for Inference-Time Alignment of Diffusion and Flow-Matching Models"
   authors:
     - family-names: Sun
       given-names: Ruolan
     - family-names: Polak
       given-names: Pawel
-  conference:
-    name: "Advances in Neural Information Processing Systems (NeurIPS)"
   year: 2026
+  notes: "Preprint; under review at NeurIPS 2026"
+  url: "https://github.com/sophialanlan/PG-MAP"

@@ -1,6 +1,6 @@
-# Anonymous project page
+# PG-MAP project page
 
-A single-file static site presenting the paper to reviewers. **No author names, no affiliations, no identifying links** — safe to upload as supplementary material for double-blind review.
+A single-file static site that serves as the public project page for the PG-MAP preprint (Ruolan Sun, Pawel Polak · Stony Brook University), currently under review at NeurIPS 2026. Self-contained: no JavaScript, no CDN, no external fonts.
 
 ## Contents
 
@@ -17,19 +17,17 @@ docs/site/
 
 In the repository **Settings → Pages**, set the source to **`main` branch, `/docs` folder**, then point any browser at `https://<owner>.github.io/PG-MAP/site/`.
 
-GitHub Pages will pick up `docs/site/index.html` automatically.
+GitHub Pages will pick up `docs/site/index.html` automatically. For the public repo this serves at `https://sophialanlan.github.io/PG-MAP/site/`.
 
-> Caveat: enabling GitHub Pages on a repo named `<owner>/PG-MAP` reveals the GitHub owner. For a strictly-anonymous reviewer link, prefer Option B during the review period.
-
-### Option B — upload as supplementary ZIP
+### Option B — package as a ZIP
 
 ```bash
 # From the repo root
 cd docs/site
-zip -r ../pgmap_anon_site.zip .
+zip -r ../pgmap_site.zip .
 ```
 
-The resulting `pgmap_anon_site.zip` (~2.4 MB) can be uploaded directly to OpenReview as anonymous supplementary material. Reviewers extract and double-click `index.html` — the page is fully self-contained (no JS, no CDN, no external fonts).
+The resulting `pgmap_site.zip` (~2.4 MB) can be shared directly or attached to a release. Anyone extracts it and double-clicks `index.html` — the page is fully self-contained (no JS, no CDN, no external fonts).
 
 ### Option C — local preview
 
@@ -39,14 +37,13 @@ python -m http.server 8000
 # then open http://localhost:8000
 ```
 
-## What's anonymized
+## Page metadata
 
-- No author names appear anywhere in the HTML.
-- No affiliations or grant numbers.
-- No GitHub usernames or external links other than the anchor links inside the page.
-- The footer says simply "Anonymous · supplementary material for NeurIPS 2026 submission".
+- Authors: **Ruolan Sun, Pawel Polak · Stony Brook University** (set in the `.authors` line of `index.html`).
+- Venue: the header notes the paper is a preprint, under review at NeurIPS 2026.
+- Public repository: <https://github.com/sophialanlan/PG-MAP>.
 
-If you need to update the page after acceptance to add author info, edit `index.html` and replace the line `<p class="authors">Anonymous authors</p>` plus the anonymized note in `.anonymous-note`.
+To update the author line or the venue note, edit the `<p class="authors">` line and the note paragraph near the top of `index.html`.
 
 ## Updating the gallery
 

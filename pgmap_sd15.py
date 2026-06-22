@@ -19,7 +19,7 @@ Usage:
     from pgmap_config import sd15_defaults
     from pgmap_reward import FrozenRewardModel
 
-    models = load_sd15_models("runwayml/stable-diffusion-v1-5")
+    models = load_sd15_models("stable-diffusion-v1-5/stable-diffusion-v1-5")
     reward = FrozenRewardModel("pickscore", device="cuda")
     config = sd15_defaults()
 
@@ -69,7 +69,7 @@ class SD15Models:
 
 
 def load_sd15_models(
-    model_id: str = "runwayml/stable-diffusion-v1-5",
+    model_id: str = "stable-diffusion-v1-5/stable-diffusion-v1-5",
     device: Optional[str] = None,
     dtype: torch.dtype = torch.float16,
 ) -> SD15Models:

@@ -6,7 +6,7 @@ Every model loaded by this codebase, where it comes from, and what it's used for
 
 | Model | HF id | License | Used in |
 |---|---|---|---|
-| Stable Diffusion 1.5    | `runwayml/stable-diffusion-v1-5`           | CreativeML Open RAIL-M       | Table 1 SD 1.5 panel |
+| Stable Diffusion 1.5    | `stable-diffusion-v1-5/stable-diffusion-v1-5`           | CreativeML Open RAIL-M       | Table 1 SD 1.5 panel |
 | SDXL base 1.0           | `stabilityai/stable-diffusion-xl-base-1.0` | CreativeML Open RAIL++-M     | Table 1 SDXL panel, Table 3 human eval |
 | SD 3.5-medium           | `stabilityai/stable-diffusion-3.5-medium`  | Stability Community License  | Table 2 FM panel — **license acceptance required** |
 

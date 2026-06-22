@@ -1,15 +1,15 @@
 # PG-MAP: Joint MAP Optimization for Inference-Time Alignment of Diffusion and Flow-Matching Models
 
-> **NeurIPS 2026** &middot; Ruolan Sun, Pawel Polak &middot; Stony Brook University
+> **Preprint &middot; under review at NeurIPS 2026** &middot; Ruolan Sun, Pawel Polak &middot; Stony Brook University
 
 [![Open in Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/sophialanlan/PG-MAP/blob/main/notebooks/colab_pgmap_quickstart.ipynb)
 [![Reproduce figures](https://img.shields.io/badge/Colab-Reproduce%20paper%20figures-success?logo=googlecolab)](https://colab.research.google.com/github/sophialanlan/PG-MAP/blob/main/notebooks/reproduce_paper_figures.ipynb)
 [![HF Space](https://img.shields.io/badge/🤗%20Demo-Gradio%20Space-orange)](https://huggingface.co/spaces/sophialan/pg-map-demo)
 [![HF Pipelines](https://img.shields.io/badge/🤗%20Pipelines-sd15%20%2F%20sdxl%20%2F%20sd3-yellow)](https://huggingface.co/sophialan)
-[![PyPI](https://img.shields.io/badge/PyPI-pg--map-blue)](#)
+[![PyPI](https://img.shields.io/badge/PyPI-pgmap--align-blue)](https://pypi.org/project/pgmap-align/)
 [![ComfyUI](https://img.shields.io/badge/ComfyUI-Custom%20Node-9cf)](comfyui/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
-[![NeurIPS 2026](https://img.shields.io/badge/NeurIPS-2026-red)](#)
+[![NeurIPS 2026](https://img.shields.io/badge/NeurIPS%202026-under%20review-red)](https://github.com/sophialanlan/PG-MAP)
 
 **PG-MAP** (*Preference-Guided Adaptive MAP*) is a training-free inference-time framework that re-optimizes the conditioning $c$ and the latent $z_t$ at every denoising step via a **trajectory-level Gibbs-MAP / proximal energy** objective with forward-consistency coupling. The same objective $\mathcal{J}_t$ instantiates on both diffusion (SD 1.5, SDXL) and flow-matching (SD3.5-medium) backbones with transport-specific active sets.
 
@@ -21,7 +21,7 @@ This repository is the **public reproducibility release** that backs the paper. 
 - One-command reproduction scripts for every main-text table
 - Post-hoc analysis utilities (win-rate, Wilcoxon, bootstrap CI, BLIP-VQA audit, CRR oracle)
 
-The code corresponds to tag **`v1.0-neurips2026`** (the camera-ready code freeze).
+The code corresponds to tag **`v1.5.2`** (release tag for the current preprint).
 
 ---
 
@@ -92,14 +92,14 @@ A drop-in ComfyUI bundle lives at [`comfyui/`](comfyui/) — three nodes (Reward
 cd ComfyUI/custom_nodes
 git clone https://github.com/sophialanlan/PG-MAP pg-map
 ln -s pg-map/comfyui pg-map-nodes
-pip install pg-map>=1.3.0      # inside ComfyUI's Python environment
+pip install pgmap-align>=1.5.0      # inside ComfyUI's Python environment
 ```
 
 Restart ComfyUI; nodes appear under the **PG-MAP** category. Sample workflow at [`comfyui/workflows/pgmap_sdxl_basic.json`](comfyui/workflows/pgmap_sdxl_basic.json). Full walkthrough in [comfyui/README.md](comfyui/README.md).
 
 ## One-line drop-in (HuggingFace Hub custom pipelines)
 
-The PG-MAP custom pipelines are published on the HuggingFace Hub. After `pip install pg-map`, any user can drop PG-MAP into an existing diffusers stack with a single argument change:
+The PG-MAP custom pipelines are published on the HuggingFace Hub. After `pip install pgmap-align`, any user can drop PG-MAP into an existing diffusers stack with a single argument change:
 
 ```python
 from diffusers import DiffusionPipeline
@@ -129,7 +129,7 @@ Pass `pg_map_config=None` and the pipeline falls through to the vanilla parent c
 
 ## Project page
 
-A self-contained, anonymous **project page with a paired image gallery** lives at [docs/site/](docs/site/) — `index.html` + `style.css` + 16 web-optimized JPEGs (~2.4 MB). Open it locally with `python -m http.server` from `docs/site/`, host it via GitHub Pages, or zip it for upload as anonymous supplementary material. See [docs/site/README.md](docs/site/README.md) for the three deployment options.
+A self-contained **project page with a paired image gallery** lives at [docs/site/](docs/site/) — `index.html` + `style.css` + 16 web-optimized JPEGs (~2.4 MB). Open it locally with `python -m http.server` from `docs/site/`, host it via GitHub Pages, or zip it for sharing / attaching to a release. See [docs/site/README.md](docs/site/README.md) for the three deployment options.
 
 ## Quick start
 
@@ -245,11 +245,12 @@ See the paper §2 and [pgmap_core.py](pgmap_core.py) for the gradient derivation
 ## Citation
 
 ```bibtex
-@inproceedings{sun2026pgmap,
+@misc{sun2026pgmap,
   title={{PG-MAP}: Joint {MAP} Optimization for Inference-Time Alignment of Diffusion and Flow-Matching Models},
   author={Sun, Ruolan and Polak, Pawel},
-  booktitle={Advances in Neural Information Processing Systems (NeurIPS)},
-  year={2026}
+  year={2026},
+  note={Preprint; under review at NeurIPS 2026},
+  url={https://github.com/sophialanlan/PG-MAP}
 }
 ```
 

@@ -292,7 +292,7 @@ def generate_image(
 # -----------------------------------------------------------------------
 
 def load_attend_and_excite(
-    model_id: str = "runwayml/stable-diffusion-v1-5",
+    model_id: str = "stable-diffusion-v1-5/stable-diffusion-v1-5",
     device: str = "cuda",
     dtype: torch.dtype = torch.float16,
 ):
@@ -1029,7 +1029,7 @@ Examples:
     # --- Apply backbone defaults ---
     if args.model_id is None:
         args.model_id = (
-            "runwayml/stable-diffusion-v1-5" if args.backbone == "sd15"
+            "stable-diffusion-v1-5/stable-diffusion-v1-5" if args.backbone == "sd15"
             else "stabilityai/stable-diffusion-xl-base-1.0"
         )
     if args.steps is None:
