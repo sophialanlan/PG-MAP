@@ -74,16 +74,6 @@ PG-MAP/
 └── run_*_experiment.py      # Multi-method driver scripts (newB, mapcz_newton, fm_variants)
 ```
 
----
-
-## Benchmark submissions
-
-| Leaderboard | Status | Where to find scripts / results |
-|---|---|---|
-| **Papers with Code** (PartiPrompts) | submission templates ready | [docs/BENCHMARKS_SUBMISSION.md §1](docs/BENCHMARKS_SUBMISSION.md) |
-| **T2I-CompBench++** (attribute binding, spatial, complex) | eval pipeline shipped; run via `eval/t2i_compbench/generate.py` | [eval/t2i_compbench/](eval/t2i_compbench/) + [docs/BENCHMARKS_SUBMISSION.md §2](docs/BENCHMARKS_SUBMISSION.md) |
-| **HEIM / GenEval / HPSv2** | not actively submitted (yet) | [docs/BENCHMARKS_SUBMISSION.md §4](docs/BENCHMARKS_SUBMISSION.md) |
-
 ## ComfyUI custom nodes
 
 A drop-in ComfyUI bundle lives at [`comfyui/`](comfyui/) — three nodes (Reward Loader → Config Builder → Sampler) for practitioner workflows. Install:
