@@ -1,6 +1,6 @@
 # PG-MAP: Joint MAP Optimization for Inference-Time Alignment of Diffusion and Flow-Matching Models
 
-> **Preprint &middot; under review at NeurIPS 2026** &middot; Ruolan Sun, Pawel Polak &middot; Stony Brook University
+> **Preprint &middot; under review at NeurIPS 2026** &middot; **Paper:** [arXiv:2606.22958](https://arxiv.org/abs/2606.22958) &middot; Ruolan Sun, Pawel Polak &middot; Stony Brook University
 
 [![Open in Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/sophialanlan/PG-MAP/blob/main/notebooks/colab_pgmap_quickstart.ipynb)
 [![Reproduce figures](https://img.shields.io/badge/Colab-Reproduce%20paper%20figures-success?logo=googlecolab)](https://colab.research.google.com/github/sophialanlan/PG-MAP/blob/main/notebooks/reproduce_paper_figures.ipynb)
