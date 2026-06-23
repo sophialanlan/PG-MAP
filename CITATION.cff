@@ -25,4 +25,7 @@ preferred-citation:
       given-names: Pawel
   year: 2026
   notes: "Preprint; under review at NeurIPS 2026"
-  url: "https://github.com/sophialanlan/PG-MAP"
+  url: "https://arxiv.org/abs/2606.22958"
+  identifiers:
+    - type: other
+      value: "arXiv:2606.22958"

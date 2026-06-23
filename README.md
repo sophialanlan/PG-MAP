@@ -9,7 +9,7 @@
 [![PyPI](https://img.shields.io/badge/PyPI-pgmap--align-blue)](https://pypi.org/project/pgmap-align/)
 [![ComfyUI](https://img.shields.io/badge/ComfyUI-Custom%20Node-9cf)](comfyui/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
-[![NeurIPS 2026](https://img.shields.io/badge/NeurIPS%202026-under%20review-red)](https://github.com/sophialanlan/PG-MAP)
+[![arXiv](https://img.shields.io/badge/arXiv-2606.22958-b31b1b.svg)](https://arxiv.org/abs/2606.22958)
 
 **PG-MAP** (*Preference-Guided Adaptive MAP*) is a training-free inference-time framework that re-optimizes the conditioning $c$ and the latent $z_t$ at every denoising step via a **trajectory-level Gibbs-MAP / proximal energy** objective with forward-consistency coupling. The same objective $\mathcal{J}_t$ instantiates on both diffusion (SD 1.5, SDXL) and flow-matching (SD3.5-medium) backbones with transport-specific active sets.
 
@@ -249,8 +249,11 @@ See the paper §2 and [pgmap_core.py](pgmap_core.py) for the gradient derivation
   title={{PG-MAP}: Joint {MAP} Optimization for Inference-Time Alignment of Diffusion and Flow-Matching Models},
   author={Sun, Ruolan and Polak, Pawel},
   year={2026},
-  note={Preprint; under review at NeurIPS 2026},
-  url={https://github.com/sophialanlan/PG-MAP}
+  eprint={2606.22958},
+  archivePrefix={arXiv},
+  primaryClass={cs.LG},
+  note={Under review at NeurIPS 2026},
+  url={https://arxiv.org/abs/2606.22958}
 }
 ```
 

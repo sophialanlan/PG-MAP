@@ -68,8 +68,11 @@ PG-MAP's reward backward through the VAE is the VRAM bottleneck. The default K=2
   title={{PG-MAP}: Joint {MAP} Optimization for Inference-Time Alignment of Diffusion and Flow-Matching Models},
   author={Sun, Ruolan and Polak, Pawel},
   year={2026},
-  note={Preprint; under review at NeurIPS 2026},
-  url={https://github.com/sophialanlan/PG-MAP}
+  eprint={2606.22958},
+  archivePrefix={arXiv},
+  primaryClass={cs.LG},
+  note={Under review at NeurIPS 2026},
+  url={https://arxiv.org/abs/2606.22958}
 }
 ```
 
