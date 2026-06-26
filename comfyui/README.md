@@ -1,6 +1,6 @@
 # PG-MAP for ComfyUI
 
-ComfyUI custom node bundle for **PG-MAP** (Preference-Guided Adaptive MAP; preprint, under review at NeurIPS 2026). Drop PG-MAP into any ComfyUI workflow as a three-node combo: load a reward model, build a config, then sample.
+ComfyUI custom node bundle for **PG-MAP** (Preference-Guided Adaptive MAP; preprint). Drop PG-MAP into any ComfyUI workflow as a three-node combo: load a reward model, build a config, then sample.
 
 ## Install
 
@@ -71,7 +71,6 @@ PG-MAP's reward backward through the VAE is the VRAM bottleneck. The default K=2
   eprint={2606.22958},
   archivePrefix={arXiv},
   primaryClass={cs.LG},
-  note={Under review at NeurIPS 2026},
   url={https://arxiv.org/abs/2606.22958}
 }
 ```

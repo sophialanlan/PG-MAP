@@ -164,9 +164,9 @@ image = pipe("a phoenix rising from ashes").images[0]   # vanilla SD 1.5
 - Diffusers `DiffusionPipeline` subclasses (`PGMAPStableDiffusionPipeline` / `PGMAPStableDiffusionXLPipeline` / `PGMAPStableDiffusion3Pipeline`) with `__call__` overrides accepting `pg_map_config=PGMAPConfig(...)`. Will register under the HuggingFace community-pipelines registry as `<sophialan>/pg-map`.
 - Speedups touching the hot path (Tweedie cache for $K_\text{inner} > 1$, `effective_lambda > eps` gate when `lambda_ramp` is active). Deferred so they can land with bench validation rather than in a foundation patch.
 
-## [v1.0-neurips2026] — 2026-05-18
+## [v1.0-preprint] — 2026-05-18
 
-Initial public release accompanying the PG-MAP preprint (under review at NeurIPS 2026) *"PG-MAP: Joint MAP Optimization for Inference-Time Alignment of Diffusion and Flow-Matching Models"*.
+Initial public release accompanying the PG-MAP preprint *"PG-MAP: Joint MAP Optimization for Inference-Time Alignment of Diffusion and Flow-Matching Models"*.
 
 ### Included
 

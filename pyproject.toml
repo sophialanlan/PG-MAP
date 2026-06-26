@@ -5,7 +5,7 @@ build-backend = "setuptools.build_meta"
 [project]
 name = "pgmap-align"
 version = "1.5.2"
-description = "PG-MAP: Joint MAP Optimization for Inference-Time Alignment of Diffusion and Flow-Matching Models (preprint; under review at NeurIPS 2026)"
+description = "PG-MAP: Joint MAP Optimization for Inference-Time Alignment of Diffusion and Flow-Matching Models (preprint)"
 readme = "README.md"
 license = { file = "LICENSE" }
 requires-python = ">=3.10"

@@ -1,6 +1,6 @@
 cff-version: 1.2.0
 title: "PG-MAP: Joint MAP Optimization for Inference-Time Alignment of Diffusion and Flow-Matching Models"
-message: "If you use this code, please cite the accompanying PG-MAP preprint (under review at NeurIPS 2026)."
+message: "If you use this code, please cite the accompanying PG-MAP preprint."
 type: software
 authors:
   - family-names: Sun
@@ -24,7 +24,7 @@ preferred-citation:
     - family-names: Polak
       given-names: Pawel
   year: 2026
-  notes: "Preprint; under review at NeurIPS 2026"
+  notes: "Preprint"
   url: "https://arxiv.org/abs/2606.22958"
   identifiers:
     - type: other

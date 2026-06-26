@@ -2,7 +2,7 @@
 FM-MAP-cz variants designed to mitigate the Euler step Jacobian amplification
 problem on flow-matching backbones (SD3.5-medium).
 
-Background (from MAP_neurips2026.tex M2 analysis):
+Background (from the paper's M2 analysis):
     A perturbation delta_z injected at scheduler step k_0 propagates to the
     endpoint as
         delta_z^(K) ~ prod_{j=k_0}^{K-1}(I + dt_j * d v_theta / d z) * delta_z^(k_0)

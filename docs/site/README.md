@@ -1,6 +1,6 @@
 # PG-MAP project page
 
-A single-file static site that serves as the public project page for the PG-MAP preprint (Ruolan Sun, Pawel Polak · Stony Brook University), currently under review at NeurIPS 2026. Self-contained: no JavaScript, no CDN, no external fonts.
+A single-file static site that serves as the public project page for the PG-MAP preprint (Ruolan Sun, Pawel Polak · Stony Brook University). Self-contained: no JavaScript, no CDN, no external fonts.
 
 ## Contents
 
@@ -40,7 +40,7 @@ python -m http.server 8000
 ## Page metadata
 
 - Authors: **Ruolan Sun, Pawel Polak · Stony Brook University** (set in the `.authors` line of `index.html`).
-- Venue: the header notes the paper is a preprint, under review at NeurIPS 2026.
+- Status: the header notes the paper is a preprint.
 - Public repository: <https://github.com/sophialanlan/PG-MAP>.
 
 To update the author line or the venue note, edit the `<p class="authors">` line and the note paragraph near the top of `index.html`.
